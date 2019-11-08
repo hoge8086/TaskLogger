@@ -1,0 +1,67 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace TaskLogger.Business.Domain.Model
+{
+    public class TaskLog
+    {
+        public string TaskName { get; set; }
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
+        public int DownTimeMinutes { get; set; }
+        public int WorkingMinutes
+        {
+            get
+            {
+                return (int)(End - Start).TotalMinutes - DownTimeMinutes;
+            }
+        }
+    }
+
+    public class TaskLogs
+    {
+        public List<TaskLog> Logs { get; set; }
+
+        public int TotalMinutes
+        {
+            get
+            {
+                return Logs.Sum(x => x.WorkingMinutes);
+            }
+        }
+        private TaskLogs FindAll(Period period)
+        {
+            return new TaskLogs { Logs = Logs.Where(x => period.IsIn(x.Start) || period.IsIn(x.End)).ToList() };
+        }
+        private TaskLogs FindAll(TaskSearchMethod searchMethod)
+        {
+            return new TaskLogs { Logs = Logs.Where(x => searchMethod.IsMatched(x)).ToList() };
+        }
+
+        public List<string> FindAllTaskName(Period period)
+        {
+            return Logs.Select(x => x.TaskName).Distinct().ToList();
+        }
+
+        public TaskReport CreateReport(ReportTarget target)
+        {
+            //Periodが全期間以外の場合は、その他をレポートに追加する????DownTimeはその他に含めるか??
+            var logsInPeriod = FindAll(target.Period);
+            return new TaskReport() {
+                Items = target.TargetTasks
+                        .Select(x => {
+                            var logs = logsInPeriod.FindAll(x);
+                            return new TaskReportItem() {
+                                Logs = logs,
+                                TaskKeyword = x.TaskKeyword,
+                                TotalMinutes = logs.TotalMinutes //メモ:日付をまたぐログはないものとして処理する(計算がやっかいなので)
+                            };
+                        })
+                        .ToList()
+                };
+        }
+    }
+}
