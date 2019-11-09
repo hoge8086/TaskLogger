@@ -4,15 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{579E5A5E-B68D-49C9-8782-9B2D1C030CD3}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TaskLogger.Business</RootNamespace>
-    <AssemblyName>TaskLogger.Business</AssemblyName>
+    <ProjectGuid>{04CBC9C4-AEB7-4273-A6BC-5F122F69036E}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>ConsoleTaskLogger</RootNamespace>
+    <AssemblyName>ConsoleTaskLogger</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +22,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -31,7 +32,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -41,13 +41,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Application\TaskLogApplicationService.cs" />
-    <Compile Include="Domain\Model\ITaskLogRepository.cs" />
-    <Compile Include="Domain\Model\Period.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Domain\Model\TaskLog.cs" />
-    <Compile Include="Domain\Model\TaskReport.cs" />
-    <Compile Include="Domain\Model\TaskSearchMethod.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TaskLogger.Business\TaskLogger.Business.csproj">
+      <Project>{579e5a5e-b68d-49c9-8782-9b2d1c030cd3}</Project>
+      <Name>TaskLogger.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TaskLogger.Infrastructure\TaskLogger.Infrastructure.csproj">
+      <Project>{9f4769a2-0336-42d6-9cb3-63359c11b5fc}</Project>
+      <Name>TaskLogger.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

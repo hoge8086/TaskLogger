@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskLogger.Business", "Task
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskLogger.BusinessTests", "TaskLogger.BusinessTests\TaskLogger.BusinessTests.csproj", "{59BEE8D9-AC39-40F8-81DC-C4E20C44342A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskLogger.Infrastructure", "TaskLogger.Infrastructure\TaskLogger.Infrastructure.csproj", "{9F4769A2-0336-42D6-9CB3-63359C11B5FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTaskLogger", "ConsoleTaskLogger\ConsoleTaskLogger.csproj", "{04CBC9C4-AEB7-4273-A6BC-5F122F69036E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{59BEE8D9-AC39-40F8-81DC-C4E20C44342A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59BEE8D9-AC39-40F8-81DC-C4E20C44342A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59BEE8D9-AC39-40F8-81DC-C4E20C44342A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F4769A2-0336-42D6-9CB3-63359C11B5FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F4769A2-0336-42D6-9CB3-63359C11B5FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F4769A2-0336-42D6-9CB3-63359C11B5FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F4769A2-0336-42D6-9CB3-63359C11B5FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04CBC9C4-AEB7-4273-A6BC-5F122F69036E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04CBC9C4-AEB7-4273-A6BC-5F122F69036E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04CBC9C4-AEB7-4273-A6BC-5F122F69036E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04CBC9C4-AEB7-4273-A6BC-5F122F69036E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

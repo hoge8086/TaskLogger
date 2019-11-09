@@ -9,26 +9,39 @@ namespace TaskLogger.Business.Application
 {
     public class TaskLogApplicationService
     {
-        public ITaskLogRepository TaskLogRepository { get; set; } = null;
-        //public TaskLogApplicationService(ITaskLogRepository taskLogRepository)
-        //{
-        //    this.taskLogRepository = taskLogRepository;
-        //}
+        public ITaskLogRepository taskLogRepository;
+
+        public TaskLogApplicationService(ITaskLogRepository taskLogRepository)
+        {
+            this.taskLogRepository = taskLogRepository;
+        }
+        public void CreateTaskLog()
+        {
+            var newTaskLog = new TaskLog();
+            taskLogRepository.Add(newTaskLog);
+            taskLogRepository.Save();
+        }
+
+        public void ChangeTaskLog(TaskLog newTaskLog)
+        {
+            taskLogRepository.Add(newTaskLog);
+            taskLogRepository.Save();
+        }
 
         public IList<TaskLog> AllTaskLogs()
         {
-            return TaskLogRepository.FindAll().Logs.AsReadOnly();
+            return taskLogRepository.FindAll().Logs.AsReadOnly();
         }
 
         public TaskReport CreateReport(ReportTarget reportTarget)
         {
-            var logs = TaskLogRepository.FindAll();
+            var logs = taskLogRepository.FindAll();
             return logs.CreateReport(reportTarget);
         }
 
         public List<string> AllTaskNames(Period period)
         {
-            var logs = TaskLogRepository.FindAll();
+            var logs = taskLogRepository.FindAll();
             return logs.FindAllTaskName(period);
         }
     }
