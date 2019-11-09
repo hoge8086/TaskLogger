@@ -13,6 +13,9 @@
             <Setter Property="VerticalAlignment"
                     Value="Center" />
         </Style>
+        <Style x:Key="notFocusable" TargetType="{x:Type DataGridCell}"> 
+            <Setter Property="Focusable" Value="False"/> 
+        </Style>
     </Window.Resources>
     <StackPanel>
         <Menu>
@@ -25,24 +28,31 @@
             CanUserAddRows="False"
             VerticalGridLinesBrush="Gray"
             HorizontalGridLinesBrush="Gray"
+            SelectionUnit="Cell"
             HeadersVisibility="Column"
             HorizontalContentAlignment="Center"
             VerticalContentAlignment="Center">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Id}" Header="ID" IsReadOnly="True" Width="25" />
+                <DataGridTextColumn Binding="{Binding Id}" Header="ID" IsReadOnly="True" Width="25" ElementStyle="{StaticResource textCenter}" CellStyle="{StaticResource notFocusable}"/>
                 <DataGridTemplateColumn IsReadOnly="True" Header="タスク名"  Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox IsEditable="True" Text="{Binding TaskName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" HorizontalAlignment="Stretch"/>
+                            <ComboBox IsEditable="True" Text="{Binding TaskName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                      HorizontalAlignment="Stretch"
+                                      BorderThickness="0"
+                                      BorderBrush="Transparent"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="開始"  Width="50" >
+                <DataGridTemplateColumn Header="開始"  Width="50">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <DockPanel>
                                 <Button DockPanel.Dock="Right" Width="10"/>
-                                <TextBox Text="{Binding Start, Mode=TwoWay, StringFormat=hh:mm, UpdateSourceTrigger=LostFocus}"/>
+                                <TextBox Text="{Binding Start, Mode=TwoWay, StringFormat=hh:mm, UpdateSourceTrigger=LostFocus}"
+                                    MaxLength="5"
+                                    BorderThickness="0"
+                                    BorderBrush="Transparent"/>
                             </DockPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -52,15 +62,18 @@
                         <DataTemplate>
                             <DockPanel>
                                 <Button DockPanel.Dock="Right" Width="10"/>
-                                <TextBox Text="{Binding End, Mode=TwoWay, StringFormat=hh:mm, UpdateSourceTrigger=LostFocus}"/>
+                                <TextBox Text="{Binding End, Mode=TwoWay, StringFormat=hh:mm, UpdateSourceTrigger=LostFocus}"
+                                    MaxLength="5"
+                                    BorderThickness="0"
+                                    BorderBrush="Transparent"/>
                             </DockPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding DownTimeMinutes, Mode=TwoWay}" ElementStyle="{StaticResource textCenter}" Header="中断"  Width="40"/>
-                <DataGridTextColumn Binding="{Binding WorkingMinutes}" ElementStyle="{StaticResource textCenter}" Header="時間"  Width="40" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding WorkingMinutes}" ElementStyle="{StaticResource textCenter}" CellStyle="{StaticResource notFocusable}" Header="時間"  Width="40" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Button Content="ログ追加" Click="Button_Click"/>
+        <Button Content="ログ追加" />
     </StackPanel>
 </Window>

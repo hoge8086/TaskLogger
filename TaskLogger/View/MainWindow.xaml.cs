@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 
 using TaskLogger.Business.Application;
 using TaskLogger.Infrastructure;
+using TaskLogger.ViewModel;
 
 namespace TaskLogger
 {
@@ -30,11 +31,6 @@ namespace TaskLogger
             var rep = new TaskLogRepository(context);
             var service = new TaskLogApplicationService(rep);
             this.DataContext = new MainWindowViewModel(service);
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

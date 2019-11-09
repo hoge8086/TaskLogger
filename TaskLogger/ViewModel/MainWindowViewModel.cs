@@ -9,7 +9,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
 
-namespace TaskLogger
+namespace TaskLogger.ViewModel
 {
 
     public class TaskLogViewModel : INotifyPropertyChanged
