@@ -12,7 +12,7 @@ using TaskLogger.Business.Domain.Model;
 //★★ハマりポイント★★
 //(1) このクラスライブラリを利用する側に、SQLiteのDLLがコピーされないので手動コピーが必要がある
 //(2) このクラスライブラリを利用する側に、App.configの内容(データベースの接続文字列など)を★全て★コピーする必要がある
-//(3) SQLiteのデータベースファイルにテーブルが自動作成されないので、手動で作成する必要がある
+//(3) 初回実行などSQLiteのデータベースファイルが存在しない場合、テーブルが自動作成されないので、手動で作成する必要がある
 namespace TaskLogger.Infrastructure
 {
     public class TaskLogContext : DbContext
