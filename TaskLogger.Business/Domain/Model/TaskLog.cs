@@ -15,7 +15,8 @@ namespace TaskLogger.Business.Domain.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string TaskName { get; set; }
-        public DateTime? Start { get; set; }
+        public DateTime? _start;
+        public DateTime? Start { get => _start; set { _start = TruncateMinute(value); } }
         public DateTime? End
         {
             get
@@ -23,7 +24,7 @@ namespace TaskLogger.Business.Domain.Model
                 if (Start == null || WorkingMinutes == null)
                     return null;
 
-                return Start.Value.AddMinutes(WorkingMinutes ?? 0 + DownTimeMinutes);
+                return Start.Value.AddMinutes((WorkingMinutes ?? 0) + DownTimeMinutes);
             }
         }
         public int DownTimeMinutes { get; set; }
@@ -39,9 +40,10 @@ namespace TaskLogger.Business.Domain.Model
         {
             this.Start = start;
         }
-        internal void ChangeEnd(DateTime end)
+        public void ChangeEnd(DateTime? end)
         {
-            WorkingMinutes = (int)((end - Start).Value.TotalMinutes);
+            end = TruncateMinute(end);
+            WorkingMinutes = (int)((end - Start).Value.TotalMinutes) - DownTimeMinutes;
         }
         public void StartNow()
         {
@@ -56,9 +58,16 @@ namespace TaskLogger.Business.Domain.Model
             return Id.ToString() + "、" + TaskName + "、期間:" + Start.ToString() + "-" + End.ToString() + "、中断時間:" + DownTimeMinutes.ToString() + "、作業時間:" + WorkingMinutes?.ToString();
         }
 
-        internal void ChangeDownTime(int downTimeMinutes)
+        public static DateTime? TruncateMinute(DateTime? dt)
         {
+            if (dt == null) return null;
+            return new DateTime(dt.Value.Year, dt.Value.Month, dt.Value.Day, dt.Value.Hour, dt.Value.Minute, 0);
+        }
+        public void ChangeDownTime(int downTimeMinutes)
+        {
+            int diff = this.DownTimeMinutes - downTimeMinutes;
             this.DownTimeMinutes = downTimeMinutes;
+            this.WorkingMinutes += diff;
         }
 
         public TaskLog()

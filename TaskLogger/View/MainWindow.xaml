@@ -48,7 +48,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <DockPanel>
-                                <Button DockPanel.Dock="Right" Width="10"/>
+                                <Button DockPanel.Dock="Right" Width="10" Command="{Binding StartNowCommand}"/>
                                 <TextBox Text="{Binding Start, Mode=TwoWay, StringFormat=hh:mm, UpdateSourceTrigger=LostFocus}"
                                     MaxLength="5"
                                     BorderThickness="0"
@@ -61,7 +61,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <DockPanel>
-                                <Button DockPanel.Dock="Right" Width="10"/>
+                                <Button DockPanel.Dock="Right" Width="10" Command="{Binding EndNowCommand}"/>
                                 <TextBox Text="{Binding End, Mode=TwoWay, StringFormat=hh:mm, UpdateSourceTrigger=LostFocus}"
                                     MaxLength="5"
                                     BorderThickness="0"
@@ -74,6 +74,6 @@
                 <DataGridTextColumn Binding="{Binding WorkingMinutes}" ElementStyle="{StaticResource textCenter}" CellStyle="{StaticResource notFocusable}" Header="時間"  Width="40" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Button Content="ログ追加" />
+        <Button Content="ログ追加" Command="{Binding AddLogCommand}"/>
     </StackPanel>
 </Window>

@@ -15,11 +15,12 @@ namespace TaskLogger.Business.Application
         {
             this.taskLogRepository = taskLogRepository;
         }
-        public void CreateTaskLog()
+        public TaskLog CreateTaskLog()
         {
             var newTaskLog = new TaskLog();
             taskLogRepository.Add(newTaskLog);
             taskLogRepository.Save();
+            return newTaskLog;
         }
 
         public void ChangeTaskLogName(int logId, string taskName)
@@ -31,6 +32,7 @@ namespace TaskLogger.Business.Application
             log.ChangeTaskName(taskName);
             taskLogRepository.Save();
         }
+
         public void ChangeTaskLogStart(int logId, DateTime start)
         {
             var log = taskLogRepository.FindByID(logId);
@@ -82,6 +84,11 @@ namespace TaskLogger.Business.Application
         public IList<TaskLog> AllTaskLogs()
         {
             return taskLogRepository.FindAll().Logs.AsReadOnly();
+        }
+
+        public TaskLog TaskLog(int id)
+        {
+            return taskLogRepository.FindByID(id);
         }
 
         public TaskReport CreateReport(ReportTarget reportTarget)
