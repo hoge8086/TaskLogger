@@ -8,6 +8,7 @@ namespace TaskLogger.Business.Domain.Model
 {
     public class TaskLog
     {
+        public int Id { get; set; }
         public string TaskName { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
@@ -18,6 +19,10 @@ namespace TaskLogger.Business.Domain.Model
             {
                 return (int)(End - Start).TotalMinutes - DownTimeMinutes;
             }
+        }
+        public override string ToString()
+        {
+            return Id.ToString() + "、" + TaskName + "、期間:" + Start.ToString() + "-" + End.ToString() + "、中断時間:" + DownTimeMinutes.ToString() + "、作業時間:" + WorkingMinutes.ToString();
         }
     }
 

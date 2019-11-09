@@ -9,10 +9,20 @@ namespace TaskLogger.Business.Domain.Model
     public interface ITaskLogRepository
     {
         TaskLogs FindAll();
+        void Add(TaskLog taskLog);
+        void Remove(TaskLog taskLog);
+        void Update(TaskLog taskLog);
+        void Save();
     }
 
     public class MockTaskLogRepository : ITaskLogRepository
     {
+
+        public void Add(TaskLog taskLog)
+        {
+            throw new NotImplementedException();
+        }
+
         public TaskLogs FindAll()
         {
             return new TaskLogs()
@@ -28,6 +38,21 @@ namespace TaskLogger.Business.Domain.Model
                         new TaskLog(){TaskName="STEP1 設計 検討", Start=DateTime.Parse("2000/1/3 13:00"), End=DateTime.Parse("2000/1/3 13:35"), DownTimeMinutes=0},      //35min
                     }
                 };
+        }
+
+        public void Remove(TaskLog taskLog)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Save()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(TaskLog taskLog)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TaskLogger"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" SizeToContent="Height" Width="525">
     <Window.Resources>
         <Style x:Key="textCenter" TargetType="TextBlock">
             <Setter Property="HorizontalAlignment"
@@ -15,16 +15,19 @@
         </Style>
     </Window.Resources>
     <StackPanel>
-        <DatePicker Text="{Binding Start}"/>
+        <Menu>
+            <MenuItem Header="設定"/>
+            <MenuItem Header="レポート生成"/>
+        </Menu>
+        <DatePicker Text="{Binding Start}" Width="100" HorizontalAlignment="Left" BorderBrush="Transparent"/>
         <DataGrid ItemsSource="{Binding TaskLogs}"
             AutoGenerateColumns="False"
-            CanUserAddRows="True"
+            CanUserAddRows="False"
             VerticalGridLinesBrush="Gray"
             HorizontalGridLinesBrush="Gray"
             HeadersVisibility="Column"
             HorizontalContentAlignment="Center"
-            VerticalContentAlignment="Center"
-            >
+            VerticalContentAlignment="Center">
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding No}" Header="ID" IsReadOnly="True" Width="25" />
                 <DataGridTemplateColumn IsReadOnly="True" Header="タスク名"  Width="*">
