@@ -19,19 +19,49 @@ namespace ConsoleTaskLogger
             {
                 Console.Write(">");
                 var line = Console.ReadLine();
+                string[] cmd = line.Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+                if (cmd.Length < 0)
+                    continue;
 
-                if(string.Compare(line, "create", true) == 0)
+                if(string.Compare(cmd[0], "create", true) == 0)
                 {
                     service.CreateTaskLog();
-
-                }else if(string.Compare(line, "all", true) == 0)
+                }
+                else if(string.Compare(cmd[0], "all", true) == 0)
                 {
                     var logs = service.AllTaskLogs();
                     foreach (var log in logs)
                         Console.WriteLine(log.ToString());
-                }else if(string.Compare(line, "quit", true) == 0)
+                }
+                else if(string.Compare(cmd[0], "changelogname", true) == 0)
+                {
+                    try
+                    {
+                        service.ChangeTaskLogName(Int32.Parse(cmd[1]), cmd[2]);
+                    }
+                    catch(Exception ex)
+                    {
+                        Console.WriteLine(ex.ToString());
+                    }
+                }
+                else if(string.Compare(cmd[0], "endnow", true) == 0)
+                {
+                    try
+                    {
+                        service.EndTaskNow(Int32.Parse(cmd[1]));
+                    }
+                    catch(Exception ex)
+                    {
+                        Console.WriteLine(ex.ToString());
+                    }
+                }
+                else if(string.Compare(cmd[0], "quit", true) == 0)
                 {
                     break;
+                }
+                else
+                {
+                    Console.WriteLine("Unkown");
                 }
             }
         }

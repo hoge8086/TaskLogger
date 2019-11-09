@@ -6,6 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using TaskLogger.Business.Domain.Model;
 
+//参考:Microsoft
+//https://docs.microsoft.com/ja-jp/aspnet/mvc/overview/older-versions/getting-started-with-ef-5-using-mvc-4/implementing-the-repository-and-unit-of-work-patterns-in-an-asp-net-mvc-application
+
 namespace TaskLogger.Infrastructure
 {
     public class TaskLogContext : DbContext
@@ -26,6 +29,11 @@ namespace TaskLogger.Infrastructure
         {
             var logs = context.TaskLogs.ToList();
             return new TaskLogs() { Logs =logs };
+        }
+
+        public TaskLog FindByID(int id)
+        {
+            return context.TaskLogs.Find(id);
         }
 
         public void Add(TaskLog taskLog)
@@ -83,6 +91,7 @@ namespace TaskLogger.Infrastructure
             // TODO: 上のファイナライザーがオーバーライドされる場合は、次の行のコメントを解除してください。
             // GC.SuppressFinalize(this);
         }
+
         #endregion
     }
 

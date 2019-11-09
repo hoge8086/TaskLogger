@@ -19,7 +19,7 @@
             <MenuItem Header="設定"/>
             <MenuItem Header="レポート生成"/>
         </Menu>
-        <DatePicker Text="{Binding Start}" Width="100" HorizontalAlignment="Left" BorderBrush="Transparent"/>
+        <DatePicker Text="{Binding Start, Mode=TwoWay}" Width="100" HorizontalAlignment="Left" BorderBrush="Transparent"/>
         <DataGrid ItemsSource="{Binding TaskLogs}"
             AutoGenerateColumns="False"
             CanUserAddRows="False"
@@ -29,11 +29,11 @@
             HorizontalContentAlignment="Center"
             VerticalContentAlignment="Center">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding No}" Header="ID" IsReadOnly="True" Width="25" />
+                <DataGridTextColumn Binding="{Binding Id}" Header="ID" IsReadOnly="True" Width="25" />
                 <DataGridTemplateColumn IsReadOnly="True" Header="タスク名"  Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox IsEditable="True" SelectedValue="{Binding TaskName}" HorizontalAlignment="Stretch"/>
+                            <ComboBox IsEditable="True" Text="{Binding TaskName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" HorizontalAlignment="Stretch"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -42,7 +42,7 @@
                         <DataTemplate>
                             <DockPanel>
                                 <Button DockPanel.Dock="Right" Width="10"/>
-                                <TextBox Text="{Binding Start, StringFormat=hh:mm}"/>
+                                <TextBox Text="{Binding Start, Mode=TwoWay, StringFormat=hh:mm, UpdateSourceTrigger=LostFocus}"/>
                             </DockPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -52,14 +52,15 @@
                         <DataTemplate>
                             <DockPanel>
                                 <Button DockPanel.Dock="Right" Width="10"/>
-                                <TextBox Text="{Binding End, StringFormat=hh:mm}"/>
+                                <TextBox Text="{Binding End, Mode=TwoWay, StringFormat=hh:mm, UpdateSourceTrigger=LostFocus}"/>
                             </DockPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding DownTimeMinutes}" ElementStyle="{StaticResource textCenter}" Header="中断"  Width="40"/>
+                <DataGridTextColumn Binding="{Binding DownTimeMinutes, Mode=TwoWay}" ElementStyle="{StaticResource textCenter}" Header="中断"  Width="40"/>
                 <DataGridTextColumn Binding="{Binding WorkingMinutes}" ElementStyle="{StaticResource textCenter}" Header="時間"  Width="40" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
+        <Button Content="ログ追加" Click="Button_Click"/>
     </StackPanel>
 </Window>

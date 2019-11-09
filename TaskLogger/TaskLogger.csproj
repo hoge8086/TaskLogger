@@ -98,6 +98,10 @@
       <Project>{579e5a5e-b68d-49c9-8782-9b2d1c030cd3}</Project>
       <Name>TaskLogger.Business</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TaskLogger.Infrastructure\TaskLogger.Infrastructure.csproj">
+      <Project>{9f4769a2-0336-42d6-9cb3-63359c11b5fc}</Project>
+      <Name>TaskLogger.Infrastructure</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

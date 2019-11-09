@@ -13,6 +13,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using TaskLogger.Business.Application;
+using TaskLogger.Infrastructure;
+
 namespace TaskLogger
 {
     /// <summary>
@@ -23,7 +26,15 @@ namespace TaskLogger
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = new MainWindowViewModel();
+            var context = new TaskLogContext();
+            var rep = new TaskLogRepository(context);
+            var service = new TaskLogApplicationService(rep);
+            this.DataContext = new MainWindowViewModel(service);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

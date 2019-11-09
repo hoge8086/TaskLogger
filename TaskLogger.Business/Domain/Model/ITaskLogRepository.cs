@@ -9,6 +9,7 @@ namespace TaskLogger.Business.Domain.Model
     public interface ITaskLogRepository
     {
         TaskLogs FindAll();
+        TaskLog FindByID(int id);
         void Add(TaskLog taskLog);
         void Remove(TaskLog taskLog);
         void Update(TaskLog taskLog);
@@ -45,6 +46,11 @@ namespace TaskLogger.Business.Domain.Model
                         new TaskLog(){TaskName="STEP1 設計 検討", Start=DateTime.Parse("2000/1/3 13:00"), WorkingMinutes=35, DownTimeMinutes=0},      //35min
                     }
                 };
+        }
+
+        public TaskLog FindByID(int id)
+        {
+            throw new NotImplementedException();
         }
 
         public void Remove(TaskLog taskLog)

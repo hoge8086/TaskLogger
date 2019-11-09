@@ -28,18 +28,37 @@ namespace TaskLogger.Business.Domain.Model
         }
         public int DownTimeMinutes { get; set; }
         public int? WorkingMinutes { get; set; }
-        //{
-        //    get
-        //    {
-        //        if (Start == null || End == null)
-        //            return null;
 
-        //        return (int)(End - Start).Value.TotalMinutes - DownTimeMinutes;
-        //    }
-        //}
+        public void ChangeTaskName(string taskName)
+        {
+            //トリムする
+            this.TaskName = taskName;
+        }
+
+        public void ChangeStart(DateTime start)
+        {
+            this.Start = start;
+        }
+        internal void ChangeEnd(DateTime end)
+        {
+            WorkingMinutes = (int)((end - Start).Value.TotalMinutes);
+        }
+        public void StartNow()
+        {
+            this.Start = DateTime.Now;
+        }
+        public void EndNow()
+        {
+            ChangeEnd(DateTime.Now);
+        }
         public override string ToString()
         {
             return Id.ToString() + "、" + TaskName + "、期間:" + Start.ToString() + "-" + End.ToString() + "、中断時間:" + DownTimeMinutes.ToString() + "、作業時間:" + WorkingMinutes?.ToString();
+        }
+
+        internal void ChangeDownTime(int downTimeMinutes)
+        {
+            this.DownTimeMinutes = downTimeMinutes;
         }
 
         public TaskLog()

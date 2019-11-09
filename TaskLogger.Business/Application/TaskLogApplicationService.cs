@@ -22,9 +22,60 @@ namespace TaskLogger.Business.Application
             taskLogRepository.Save();
         }
 
-        public void ChangeTaskLog(TaskLog newTaskLog)
+        public void ChangeTaskLogName(int logId, string taskName)
         {
-            taskLogRepository.Add(newTaskLog);
+            var log = taskLogRepository.FindByID(logId);
+            if (log == null)
+                throw new KeyNotFoundException();
+
+            log.ChangeTaskName(taskName);
+            taskLogRepository.Save();
+        }
+        public void ChangeTaskLogStart(int logId, DateTime start)
+        {
+            var log = taskLogRepository.FindByID(logId);
+            if (log == null)
+                throw new KeyNotFoundException();
+
+            log.ChangeStart(start);
+            taskLogRepository.Save();
+        }
+        public void ChangeTaskLogDownTime(int logId, int DownTimeMinutes)
+        {
+            var log = taskLogRepository.FindByID(logId);
+            if (log == null)
+                throw new KeyNotFoundException();
+
+            log.ChangeDownTime(DownTimeMinutes);
+            taskLogRepository.Save();
+        }
+
+        public void StartTaskNow(int logId)
+        {
+            var log = taskLogRepository.FindByID(logId);
+            if (log == null)
+                throw new KeyNotFoundException();
+
+            log.StartNow();
+            taskLogRepository.Save();
+        }
+        public void EndTaskNow(int logId)
+        {
+            var log = taskLogRepository.FindByID(logId);
+            if (log == null)
+                throw new KeyNotFoundException();
+
+            log.EndNow();
+            taskLogRepository.Save();
+        }
+
+        public void ChangeTaskLogEnd(int logId, DateTime end)
+        {
+            var log = taskLogRepository.FindByID(logId);
+            if (log == null)
+                throw new KeyNotFoundException();
+
+            log.ChangeEnd(end);
             taskLogRepository.Save();
         }
 
