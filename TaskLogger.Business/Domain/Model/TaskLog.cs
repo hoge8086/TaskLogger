@@ -16,18 +16,27 @@ namespace TaskLogger.Business.Domain.Model
         public int Id { get; set; }
         public string TaskName { get; set; }
         public DateTime? Start { get; set; }
-        public DateTime? End { get; set; }
-        public int DownTimeMinutes { get; set; }
-        public int? WorkingMinutes
+        public DateTime? End
         {
             get
             {
-                if (Start == null || End == null)
+                if (Start == null || WorkingMinutes == null)
                     return null;
 
-                return (int)(End - Start).Value.TotalMinutes - DownTimeMinutes;
+                return Start.Value.AddMinutes(WorkingMinutes ?? 0 + DownTimeMinutes);
             }
         }
+        public int DownTimeMinutes { get; set; }
+        public int? WorkingMinutes { get; set; }
+        //{
+        //    get
+        //    {
+        //        if (Start == null || End == null)
+        //            return null;
+
+        //        return (int)(End - Start).Value.TotalMinutes - DownTimeMinutes;
+        //    }
+        //}
         public override string ToString()
         {
             return Id.ToString() + "、" + TaskName + "、期間:" + Start.ToString() + "-" + End.ToString() + "、中断時間:" + DownTimeMinutes.ToString() + "、作業時間:" + WorkingMinutes?.ToString();
@@ -38,8 +47,9 @@ namespace TaskLogger.Business.Domain.Model
             Id = 0;
             TaskName = "";
             Start = DateTime.Now;
-            End = null;
+            //End = null;
             DownTimeMinutes = 0;
+            WorkingMinutes = null;
         }
 
     }
