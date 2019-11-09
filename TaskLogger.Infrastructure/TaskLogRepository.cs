@@ -9,6 +9,10 @@ using TaskLogger.Business.Domain.Model;
 //参考:Microsoft
 //https://docs.microsoft.com/ja-jp/aspnet/mvc/overview/older-versions/getting-started-with-ef-5-using-mvc-4/implementing-the-repository-and-unit-of-work-patterns-in-an-asp-net-mvc-application
 
+//★★ハマりポイント★★
+//(1) このクラスライブラリを利用する側に、SQLiteのDLLがコピーされないので手動コピーが必要がある
+//(2) このクラスライブラリを利用する側に、App.configの内容(データベースの接続文字列など)を★全て★コピーする必要がある
+//(3) SQLiteのデータベースファイルにテーブルが自動作成されないので、手動で作成する必要がある
 namespace TaskLogger.Infrastructure
 {
     public class TaskLogContext : DbContext
