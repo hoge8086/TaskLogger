@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TaskLogger.View"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="MainWindow" SizeToContent="Height" Width="525">
+        Title="MainWindow" SizeToContent="Height" Width="525" ResizeMode="NoResize" >
     <Window.Resources>
         <Style x:Key="textCenter" TargetType="TextBlock">
             <Setter Property="HorizontalAlignment"
@@ -16,14 +17,31 @@
         <Style x:Key="notFocusable" TargetType="{x:Type DataGridCell}"> 
             <Setter Property="Focusable" Value="False"/> 
         </Style>
+        <Style x:Key="inputNowButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Style.Triggers>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DockPanel}}, Path=IsMouseOver}" Value="True"/>
+                        <Condition Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.Date}" Value="{x:Static sys:DateTime.Today}"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Visibility" Value="Visible"/>
+                </MultiDataTrigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
     <StackPanel>
         <Menu>
             <MenuItem Header="設定"/>
             <MenuItem Header="レポート生成" Click="MenuItem_Click"/>
         </Menu>
-        <DatePicker Text="{Binding Date, Mode=TwoWay}" Width="100" HorizontalAlignment="Left" Margin="5"/>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="◀" Background="Transparent" BorderBrush="Transparent" Foreground="Gray" Command="{Binding NextDayCommand}"/>
+            <DatePicker Text="{Binding Date, Mode=TwoWay}" Width="100" HorizontalAlignment="Left" Margin="5" Focusable="False" />
+            <Button Content="▶" Background="Transparent" BorderBrush="Transparent" Foreground="Gray" Command="{Binding PrevDayCommand}"/>
+        </StackPanel>
         <DataGrid x:Name="taskLogDataGrid" ItemsSource="{Binding TaskLogs}"
+            MaxHeight="400"
             AutoGenerateColumns="False"
             CanUserAddRows="False"
             CanUserDeleteRows="False"
@@ -55,8 +73,9 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <DockPanel>
-                                <Button DockPanel.Dock="Right" Width="10" Command="{Binding StartNowCommand}"/>
+                                <Button DockPanel.Dock="Right" Width="10" Command="{Binding StartNowCommand}" Style="{StaticResource inputNowButtonStyle}"/>
                                 <TextBox Text="{Binding Start, Mode=TwoWay, StringFormat=HH:mm, UpdateSourceTrigger=LostFocus}"
+                                    TextAlignment="Center"
                                     MaxLength="5"
                                     BorderThickness="0"
                                     BorderBrush="Transparent"/>
@@ -68,7 +87,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <DockPanel>
-                                <Button DockPanel.Dock="Right" Width="10" Command="{Binding EndNowCommand}"/>
+                                <Button DockPanel.Dock="Right" Width="10" Command="{Binding EndNowCommand}" Style="{StaticResource inputNowButtonStyle}"/>
                                 <TextBox Text="{Binding End, Mode=TwoWay, StringFormat=HH:mm, UpdateSourceTrigger=LostFocus}"
                                     MaxLength="5"
                                     BorderThickness="0"
@@ -78,7 +97,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding DownTimeMinutes, Mode=TwoWay}" ElementStyle="{StaticResource textCenter}" Header="中断"  Width="40"/>
-                <DataGridTextColumn Binding="{Binding WorkingMinutes}" ElementStyle="{StaticResource textCenter}" Header="時間"  Width="40" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding WorkingMinutes, Converter={local:MinutesToHHMMConverter}}" ElementStyle="{StaticResource textCenter}" Header="時間"  Width="40" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
         <Button Content="ログ追加" Command="{Binding AddLogCommand}"/>

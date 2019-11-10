@@ -21,6 +21,8 @@ namespace TaskLogger.ViewModel
 
         public DelegateCommand AddLogCommand { get; set; }
         public DelegateCommand DeleteLogCommand { get; set; }
+        public DelegateCommand NextDayCommand { get; set; }
+        public DelegateCommand PrevDayCommand { get; set; }
         private DateTime _Date;
         public DateTime Date
         {
@@ -56,6 +58,16 @@ namespace TaskLogger.ViewModel
                         if (log == null) return;
                         service.DeleteTaskLog(log.Id);
                         Update();
+                    });
+            NextDayCommand = new DelegateCommand(
+                    (_) =>
+                    {
+                        Date = Date.AddDays(1);
+                    });
+            PrevDayCommand = new DelegateCommand(
+                    (_) =>
+                    {
+                        Date = Date.AddDays(-1);
                     });
             Update();
         }
