@@ -55,6 +55,36 @@ namespace TaskLogger.Infrastructure
             context.Entry(taskLog).State = EntityState.Modified;
         }
 
+        public TaskLogs FindWithinPeriod(Period period)
+        {
+            //高速化のため「LINQ to Entities」を使う
+            //Period.IsIn()を使いたいが、「LINQ to Entities」のためにインライン化する必要がある.
+            //Period.IsIn()と合わせるようにする
+            List<TaskLog> logs = null;
+            if(period is WholePeriod)
+            {
+                logs = context.TaskLogs.ToList();
+            }
+            else if(period is OneDayPeriod)
+            {
+                var p = period as OneDayPeriod;
+                if (p.Day == null) throw new ArgumentNullException("FindWithinPeriod:Date is null.");
+                logs = context.TaskLogs.Where(x => x.Start.Value.Year == p.Day.Year && x.Start.Value.Month == p.Day.Month && x.Start.Value.Day == p.Day.Day).ToList();
+            }
+            else if(period is PartialPeriod)
+            {
+                var p = period as PartialPeriod;
+                var endNextDay = p.EndDay.AddDays(1);
+                //TaskLog.Endは計算で出してるので、インライン化では使えない
+                //★★IsIn()と条件が異なるので注意(終日だけ期間内が判定されないが、日付をまたぐタスクログはない前提)
+                logs = context.TaskLogs.Where(x => (p.StartDay <= x.Start.Value && x.Start.Value < endNextDay)).ToList();
+            }else
+            {
+                throw new NotImplementedException("FindWithinPeriod: Notimplemention period typl.");
+            }
+            return new TaskLogs() { Logs =logs };
+        }
+
         public void Save()
         {
             context.SaveChanges();
@@ -95,7 +125,6 @@ namespace TaskLogger.Infrastructure
             // TODO: 上のファイナライザーがオーバーライドされる場合は、次の行のコメントを解除してください。
             // GC.SuppressFinalize(this);
         }
-
         #endregion
     }
 

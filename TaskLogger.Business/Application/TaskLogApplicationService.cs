@@ -17,7 +17,8 @@ namespace TaskLogger.Business.Application
         }
         public TaskLog CreateTaskLog()
         {
-            var newTaskLog = new TaskLog();
+            var recentlyLogs = taskLogRepository.FindWithinPeriod(RecentlyPeriod);
+            var newTaskLog = new TaskLog(recentlyLogs);
             taskLogRepository.Add(newTaskLog);
             taskLogRepository.Save();
             return newTaskLog;
@@ -61,6 +62,14 @@ namespace TaskLogger.Business.Application
             log.StartNow();
             taskLogRepository.Save();
         }
+
+        public void DeleteTaskLog(int logId)
+        {
+            var log = taskLogRepository.FindByID(logId);
+            taskLogRepository.Remove(log);
+            taskLogRepository.Save();
+        }
+
         public void EndTaskNow(int logId)
         {
             var log = taskLogRepository.FindByID(logId);
@@ -97,10 +106,12 @@ namespace TaskLogger.Business.Application
             return logs.CreateReport(reportTarget);
         }
 
-        public List<string> AllTaskNames(Period period)
+        public List<string> RecentlyTaskNames()
         {
-            var logs = taskLogRepository.FindAll();
-            return logs.FindAllTaskName(period);
+            var logs = taskLogRepository.FindWithinPeriod(RecentlyPeriod);
+            return logs.TaskNamesByRecentlyOrder();
         }
+
+        private static readonly PartialPeriod RecentlyPeriod = new PartialPeriod() { StartDay = DateTime.Today, EndDay = DateTime.Today.AddDays(14)};
     }
 }

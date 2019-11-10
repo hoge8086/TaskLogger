@@ -10,6 +10,7 @@ namespace TaskLogger.Business.Domain.Model
     {
         TaskLogs FindAll();
         TaskLog FindByID(int id);
+        TaskLogs FindWithinPeriod(Period period);
         void Add(TaskLog taskLog);
         void Remove(TaskLog taskLog);
         void Update(TaskLog taskLog);
@@ -49,6 +50,11 @@ namespace TaskLogger.Business.Domain.Model
         }
 
         public TaskLog FindByID(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public TaskLogs FindWithinPeriod(Period period)
         {
             throw new NotImplementedException();
         }

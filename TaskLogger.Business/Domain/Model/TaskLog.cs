@@ -80,6 +80,16 @@ namespace TaskLogger.Business.Domain.Model
             WorkingMinutes = null;
         }
 
+        public TaskLog(TaskLogs logs)
+        {
+            Id = 0;
+            var recentTaskNames = logs.TaskNamesByRecentlyOrder();
+            TaskName = recentTaskNames.Count > 0 ? recentTaskNames[0] : "";
+            Start = DateTime.Now;
+            //End = null;
+            DownTimeMinutes = 0;
+            WorkingMinutes = null;
+        }
     }
 
     public class TaskLogs
@@ -102,10 +112,10 @@ namespace TaskLogger.Business.Domain.Model
             return new TaskLogs { Logs = Logs.Where(x => searchMethod.IsMatched(x)).ToList() };
         }
 
-        public List<string> FindAllTaskName(Period period)
-        {
-            return Logs.Select(x => x.TaskName).Distinct().ToList();
-        }
+        //public List<string> FindAllTaskName(Period period)
+        //{
+        //    return Logs.Select(x => x.TaskName).Distinct().ToList();
+        //}
 
         public TaskReport CreateReport(ReportTarget target)
         {
@@ -123,6 +133,20 @@ namespace TaskLogger.Business.Domain.Model
                         })
                         .ToList()
                 };
+        }
+
+        //public TaskLog NewTaskLog()
+        //{
+        //    var recently = RecentlyTaskNames();
+        //    return new TaskLog(recently.Count > 0 ? recently[0] : "");
+        //}
+
+        public List<string> TaskNamesByRecentlyOrder()
+        {
+            return Logs.OrderByDescending(x => x.Start)
+                        .Select(x => x.TaskName)
+                        .Distinct()
+                        .ToList();
         }
     }
 }

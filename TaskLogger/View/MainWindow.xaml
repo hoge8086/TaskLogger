@@ -1,9 +1,9 @@
-﻿<Window x:Class="TaskLogger.MainWindow"
+﻿<Window x:Class="TaskLogger.View.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TaskLogger"
+        xmlns:local="clr-namespace:TaskLogger.View"
         mc:Ignorable="d"
         Title="MainWindow" SizeToContent="Height" Width="525">
     <Window.Resources>
@@ -20,26 +20,33 @@
     <StackPanel>
         <Menu>
             <MenuItem Header="設定"/>
-            <MenuItem Header="レポート生成"/>
+            <MenuItem Header="レポート生成" Click="MenuItem_Click"/>
         </Menu>
         <DatePicker Text="{Binding Start, Mode=TwoWay}" Width="100" HorizontalAlignment="Left" BorderBrush="Transparent"/>
-        <DataGrid ItemsSource="{Binding TaskLogs}"
+        <DataGrid x:Name="taskLogDataGrid" ItemsSource="{Binding TaskLogs}"
             AutoGenerateColumns="False"
             CanUserAddRows="False"
+            CanUserDeleteRows="False"
             VerticalGridLinesBrush="Gray"
             HorizontalGridLinesBrush="Gray"
-            SelectionUnit="Cell"
             HeadersVisibility="Column"
             HorizontalContentAlignment="Center"
             VerticalContentAlignment="Center">
+            <!--
+            SelectionUnit="Cell"
+            -->
+            <DataGrid.InputBindings>
+                <KeyBinding Key="Delete" Command="{Binding DeleteLogCommand}" CommandParameter="{Binding ElementName=taskLogDataGrid, Path=SelectedItem}"/>
+            </DataGrid.InputBindings>
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Id}" Header="ID" IsReadOnly="True" Width="25" ElementStyle="{StaticResource textCenter}" CellStyle="{StaticResource notFocusable}"/>
+                <DataGridTextColumn Binding="{Binding Id}" Header="ID" IsReadOnly="True" Width="25" ElementStyle="{StaticResource textCenter}"/>
                 <DataGridTemplateColumn IsReadOnly="True" Header="タスク名"  Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <ComboBox IsEditable="True" Text="{Binding TaskName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
                                       HorizontalAlignment="Stretch"
                                       BorderThickness="0"
+                                      ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DataContext.RecentlyTaskNames}"
                                       BorderBrush="Transparent"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -49,7 +56,7 @@
                         <DataTemplate>
                             <DockPanel>
                                 <Button DockPanel.Dock="Right" Width="10" Command="{Binding StartNowCommand}"/>
-                                <TextBox Text="{Binding Start, Mode=TwoWay, StringFormat=hh:mm, UpdateSourceTrigger=LostFocus}"
+                                <TextBox Text="{Binding Start, Mode=TwoWay, StringFormat=HH:mm, UpdateSourceTrigger=LostFocus}"
                                     MaxLength="5"
                                     BorderThickness="0"
                                     BorderBrush="Transparent"/>
@@ -62,7 +69,7 @@
                         <DataTemplate>
                             <DockPanel>
                                 <Button DockPanel.Dock="Right" Width="10" Command="{Binding EndNowCommand}"/>
-                                <TextBox Text="{Binding End, Mode=TwoWay, StringFormat=hh:mm, UpdateSourceTrigger=LostFocus}"
+                                <TextBox Text="{Binding End, Mode=TwoWay, StringFormat=HH:mm, UpdateSourceTrigger=LostFocus}"
                                     MaxLength="5"
                                     BorderThickness="0"
                                     BorderBrush="Transparent"/>
@@ -71,7 +78,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding DownTimeMinutes, Mode=TwoWay}" ElementStyle="{StaticResource textCenter}" Header="中断"  Width="40"/>
-                <DataGridTextColumn Binding="{Binding WorkingMinutes}" ElementStyle="{StaticResource textCenter}" CellStyle="{StaticResource notFocusable}" Header="時間"  Width="40" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding WorkingMinutes}" ElementStyle="{StaticResource textCenter}" Header="時間"  Width="40" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
         <Button Content="ログ追加" Command="{Binding AddLogCommand}"/>

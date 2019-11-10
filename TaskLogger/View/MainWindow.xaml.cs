@@ -17,7 +17,7 @@ using TaskLogger.Business.Application;
 using TaskLogger.Infrastructure;
 using TaskLogger.ViewModel;
 
-namespace TaskLogger
+namespace TaskLogger.View
 {
     /// <summary>
     /// MainWindow.xaml の相互作用ロジック
@@ -31,6 +31,12 @@ namespace TaskLogger
             var rep = new TaskLogRepository(context);
             var service = new TaskLogApplicationService(rep);
             this.DataContext = new MainWindowViewModel(service);
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            var win = new ReportWindow();
+            win.ShowDialog();
         }
     }
 }

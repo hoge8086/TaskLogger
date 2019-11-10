@@ -18,6 +18,7 @@ namespace TaskLogger.ViewModel
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         public DelegateCommand AddLogCommand { get; set; }
+        public DelegateCommand DeleteLogCommand { get; set; }
         private DateTime _Date;
         public DateTime Date
         {
@@ -30,29 +31,43 @@ namespace TaskLogger.ViewModel
                 RaisePropertyChanged(nameof(Date));
             }
         }
-
+        public ObservableCollection<string> RecentlyTaskNames { get; set; }
         public ObservableCollection<TaskLogViewModel> TaskLogs { get; set; }
         private TaskLogApplicationService service;
         public MainWindowViewModel(TaskLogApplicationService service)
         {
             this.service = service;
+            this.TaskLogs = new ObservableCollection<TaskLogViewModel>();
+            this.RecentlyTaskNames = new ObservableCollection<string>();
             AddLogCommand = new DelegateCommand(
                     (_) =>
                     {
                         var log = service.CreateTaskLog();
                         TaskLogs.Add(new TaskLogViewModel(log.Id, service));
                     });
+            DeleteLogCommand = new DelegateCommand(
+                    (x) =>
+                    {
+                        var log = x as TaskLogViewModel;
+                        if (log == null) return;
+                        service.DeleteTaskLog(log.Id);
+                        Update();
+                    });
             Update();
         }
 
         public void Update()
         {
-            TaskLogs = new ObservableCollection<TaskLogViewModel>();
+            //TaskLogs = new ObservableCollection<TaskLogViewModel>();
+            TaskLogs.Clear();
             var logs = service.AllTaskLogs();
             foreach (var log in logs)
             {
                 TaskLogs.Add(new TaskLogViewModel(log.Id, service));
             }
+            RecentlyTaskNames.Clear();
+            foreach(var tn in service.RecentlyTaskNames())
+                RecentlyTaskNames.Add(tn);
         }
     }
 }
