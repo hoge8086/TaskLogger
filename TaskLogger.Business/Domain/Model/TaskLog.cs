@@ -27,6 +27,17 @@ namespace TaskLogger.Business.Domain.Model
                 return Start.Value.AddMinutes((WorkingMinutes ?? 0) + DownTimeMinutes);
             }
         }
+        public void ChangeEnd(DateTime? end)
+        {
+            end = TruncateMinute(end);
+            WorkingMinutes = (int)((end - Start).Value.TotalMinutes) - DownTimeMinutes;
+        }
+        public void ChangeDownTime(int downTimeMinutes)
+        {
+            int diff = this.DownTimeMinutes - downTimeMinutes;
+            this.DownTimeMinutes = downTimeMinutes;
+            this.WorkingMinutes += diff;
+        }
         public int DownTimeMinutes { get; set; }
         public int? WorkingMinutes { get; set; }
 
@@ -39,11 +50,6 @@ namespace TaskLogger.Business.Domain.Model
         public void ChangeStart(DateTime start)
         {
             this.Start = start;
-        }
-        public void ChangeEnd(DateTime? end)
-        {
-            end = TruncateMinute(end);
-            WorkingMinutes = (int)((end - Start).Value.TotalMinutes) - DownTimeMinutes;
         }
         public void StartNow()
         {
@@ -62,12 +68,6 @@ namespace TaskLogger.Business.Domain.Model
         {
             if (dt == null) return null;
             return new DateTime(dt.Value.Year, dt.Value.Month, dt.Value.Day, dt.Value.Hour, dt.Value.Minute, 0);
-        }
-        public void ChangeDownTime(int downTimeMinutes)
-        {
-            int diff = this.DownTimeMinutes - downTimeMinutes;
-            this.DownTimeMinutes = downTimeMinutes;
-            this.WorkingMinutes += diff;
         }
 
         public TaskLog()
