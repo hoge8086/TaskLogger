@@ -17,29 +17,36 @@ namespace TaskLogger.Business.Domain.Model
         public string TaskName { get; set; }
         public DateTime? _start;
         public DateTime? Start { get => _start; set { _start = TruncateMinute(value); } }
-        public DateTime? End
+        public DateTime? _end;
+        public DateTime? End { get => _end ; set { _end = TruncateMinute(value); } }
+        public int DownTimeMinutes { get; set; }
+        public int? WorkingMinutes
         {
             get
             {
-                if (Start == null || WorkingMinutes == null)
+                if (_start == null || _end == null)
                     return null;
 
-                return Start.Value.AddMinutes((WorkingMinutes ?? 0) + DownTimeMinutes);
+                return (int)((_end - _start).Value.TotalMinutes) - DownTimeMinutes;
             }
         }
+        //{
+        //    get
+        //    {
+        //        if (Start == null || WorkingMinutes == null)
+        //            return null;
+
+        //        return Start.Value.AddMinutes((WorkingMinutes ?? 0) + DownTimeMinutes);
+        //    }
+        //}
         public void ChangeEnd(DateTime? end)
         {
-            end = TruncateMinute(end);
-            WorkingMinutes = (int)((end - Start).Value.TotalMinutes) - DownTimeMinutes;
+            End = end;
         }
         public void ChangeDownTime(int downTimeMinutes)
         {
-            int diff = this.DownTimeMinutes - downTimeMinutes;
-            this.DownTimeMinutes = downTimeMinutes;
-            this.WorkingMinutes += diff;
+            DownTimeMinutes = downTimeMinutes;
         }
-        public int DownTimeMinutes { get; set; }
-        public int? WorkingMinutes { get; set; }
 
         public void ChangeTaskName(string taskName)
         {
@@ -57,14 +64,14 @@ namespace TaskLogger.Business.Domain.Model
         }
         public void EndNow()
         {
-            ChangeEnd(DateTime.Now);
+            this.End = DateTime.Now;
         }
         public override string ToString()
         {
             return Id.ToString() + "、" + TaskName + "、期間:" + Start.ToString() + "-" + End.ToString() + "、中断時間:" + DownTimeMinutes.ToString() + "、作業時間:" + WorkingMinutes?.ToString();
         }
 
-        public static DateTime? TruncateMinute(DateTime? dt)
+        private static DateTime? TruncateMinute(DateTime? dt)
         {
             if (dt == null) return null;
             return new DateTime(dt.Value.Year, dt.Value.Month, dt.Value.Day, dt.Value.Hour, dt.Value.Minute, 0);
@@ -75,9 +82,8 @@ namespace TaskLogger.Business.Domain.Model
             Id = 0;
             TaskName = "";
             Start = null;
-            //End = null;
+            End = null;
             DownTimeMinutes = 0;
-            WorkingMinutes = null;
         }
 
         public TaskLog(string taskName, DateTime start)
@@ -85,19 +91,9 @@ namespace TaskLogger.Business.Domain.Model
             Id = 0;
             TaskName = taskName;
             Start = start;
+            End = null;
             DownTimeMinutes = 0;
-            WorkingMinutes = null;
         }
-        //public TaskLog(TaskLogs logs)
-        //{
-        //    Id = 0;
-        //    var recentTaskNames = logs.TaskNamesByRecentlyOrder();
-        //    TaskName = recentTaskNames.Count > 0 ? recentTaskNames[0] : "";
-        //    Start = DateTime.Now;
-        //    //End = null;
-        //    DownTimeMinutes = 0;
-        //    WorkingMinutes = null;
-        //}
     }
 
     public class TaskLogFactory
@@ -116,8 +112,7 @@ namespace TaskLogger.Business.Domain.Model
                 return new TaskLog(defaultTaskName, DateTime.Now);
             }
             var logs = taskLogRepository.FindWithinPeriod(new DatePeriod() { Date = logDateTime });
-            var newTaskLog = new TaskLog(defaultTaskName, logs.LastTime() ?? new DateTime(logDateTime.Year, logDateTime.Month, logDateTime.Day, 8, 30, 0));
-            return newTaskLog;
+            return new TaskLog(defaultTaskName, logs.LastEndTime() ?? logDateTime.AddHours(8).AddMinutes(30));
         }
     }
 
@@ -178,7 +173,7 @@ namespace TaskLogger.Business.Domain.Model
                         .ToList();
         }
 
-        public DateTime? LastTime()
+        public DateTime? LastEndTime()
         {
             return Logs.Max(x => x.End);
         }
