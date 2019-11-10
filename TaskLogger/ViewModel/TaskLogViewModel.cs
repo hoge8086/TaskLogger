@@ -14,7 +14,7 @@ namespace TaskLogger.ViewModel
 
         private int _Id;
         private string _TaskName;
-        private DateTime? _Start;
+        private DateTime _Start;
         private DateTime? _End;
         private int _DownTimeMinutes;
         private int? _WorkingMinutes;
@@ -83,7 +83,7 @@ namespace TaskLogger.ViewModel
             }
         }
 
-        public DateTime? Start
+        public DateTime Start
         {
             get { return _Start; }
             set
@@ -91,7 +91,7 @@ namespace TaskLogger.ViewModel
                 if (value == _Start)
                     return;
                 _Start = value;
-                service.ChangeTaskLogStart(_Id, _Start.Value);
+                service.ChangeTaskLogStart(_Id, _Start);
                 Update();
                 //RaisePropertyChanged(nameof(Start));
                 //RaisePropertyChanged(nameof(WorkingMinutes));
@@ -104,7 +104,10 @@ namespace TaskLogger.ViewModel
             {
                 if (value == _End)
                     return;
-                _End = value;
+                if (value != null)
+                    _End = new DateTime(Start.Year, Start.Month, Start.Day, value.Value.Hour, value.Value.Minute, 0);
+                else
+                    _End = null;
                 service.ChangeTaskLogEnd(_Id, _End.Value);
                 Update();
                 //RaisePropertyChanged(nameof(End));

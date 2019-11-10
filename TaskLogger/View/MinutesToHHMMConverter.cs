@@ -8,12 +8,12 @@ using System.Windows.Markup;
 
 namespace TaskLogger.View
 {
-    class MinutesToHHMMConverter: MarkupExtension, IValueConverter
+    class MinutesToHHmmConverter: MarkupExtension, IValueConverter
     {
-        private static MinutesToHHMMConverter _converter;
+        private static MinutesToHHmmConverter _converter;
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
-            return _converter ?? (_converter = new MinutesToHHMMConverter());
+            return _converter ?? (_converter = new MinutesToHHmmConverter());
         }
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
@@ -23,9 +23,9 @@ namespace TaskLogger.View
 
             if (!(value is int)) throw new ArgumentException("not int");
             int minutes = (int)value;
-            if (minutes < 60)
-                return minutes.ToString();
-            return string.Format("{0}:{1:D2}", minutes / 60, minutes % 60);
+            //if (minutes < 60)
+            //    return minutes.ToString();
+            return string.Format("{0:D2}:{1:D2}", minutes / 60, minutes % 60);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

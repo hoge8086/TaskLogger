@@ -69,15 +69,13 @@ namespace TaskLogger.Infrastructure
             {
                 var p = period as DatePeriod;
                 if (p.Date == null) throw new ArgumentNullException("FindWithinPeriod:Date is null.");
-                logs = context.TaskLogs.Where(x => x.Start.Value.Year == p.Date.Year && x.Start.Value.Month == p.Date.Month && x.Start.Value.Day == p.Date.Day).ToList();
+                logs = context.TaskLogs.Where(x => x.Start.Year == p.Date.Year && x.Start.Month == p.Date.Month && x.Start.Day == p.Date.Day).ToList();
             }
             else if(period is PartialPeriod)
             {
                 var p = period as PartialPeriod;
                 var endNextDay = p.EndDay.AddDays(1);
-                //TaskLog.Endは計算で出してるので、インライン化では使えない
-                //★★IsIn()と条件が異なるので注意(終日だけ期間内が判定されないが、日付をまたぐタスクログはない前提)
-                logs = context.TaskLogs.Where(x => (p.StartDay <= x.Start.Value && x.Start.Value < endNextDay)).ToList();
+                logs = context.TaskLogs.Where(x => (p.StartDay <= x.Start && x.Start < endNextDay || (x.End != null && p.StartDay <= x.End.Value && x.End.Value < endNextDay))).ToList();
             }else
             {
                 throw new NotImplementedException("FindWithinPeriod: Notimplemention period typl.");

@@ -15,8 +15,8 @@ namespace TaskLogger.Business.Domain.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public string TaskName { get; set; }
-        public DateTime? _start;
-        public DateTime? Start { get => _start; set { _start = TruncateMinute(value); } }
+        public DateTime _start;
+        public DateTime Start { get => _start; set { _start = TruncateMinute(new Nullable<DateTime>(value)).Value; } }
         public DateTime? _end;
         public DateTime? End { get => _end ; set { _end = TruncateMinute(value); } }
         public int DownTimeMinutes { get; set; }
@@ -81,7 +81,7 @@ namespace TaskLogger.Business.Domain.Model
         {
             Id = 0;
             TaskName = "";
-            Start = null;
+            Start = DateTime.Now;
             End = null;
             DownTimeMinutes = 0;
         }
@@ -135,12 +135,6 @@ namespace TaskLogger.Business.Domain.Model
         {
             return new TaskLogs { Logs = Logs.Where(x => searchMethod.IsMatched(x)).ToList() };
         }
-
-        //public List<string> FindAllTaskName(Period period)
-        //{
-        //    return Logs.Select(x => x.TaskName).Distinct().ToList();
-        //}
-
         public TaskReport CreateReport(ReportTarget target)
         {
             //Periodが全期間以外の場合は、その他をレポートに追加する????DownTimeはその他に含めるか??
@@ -158,12 +152,6 @@ namespace TaskLogger.Business.Domain.Model
                         .ToList()
                 };
         }
-
-        //public TaskLog NewTaskLog()
-        //{
-        //    var recently = RecentlyTaskNames();
-        //    return new TaskLog(recently.Count > 0 ? recently[0] : "");
-        //}
 
         public List<string> TaskNamesByRecentlyOrder()
         {

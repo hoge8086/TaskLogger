@@ -36,9 +36,13 @@
             <MenuItem Header="レポート生成" Click="MenuItem_Click"/>
         </Menu>
         <StackPanel Orientation="Horizontal">
-            <Button Content="◀" Background="Transparent" BorderBrush="Transparent" Foreground="Gray" Command="{Binding NextDayCommand}"/>
-            <DatePicker Text="{Binding Date, Mode=TwoWay}" Width="100" HorizontalAlignment="Left" Margin="5" Focusable="False" />
-            <Button Content="▶" Background="Transparent" BorderBrush="Transparent" Foreground="Gray" Command="{Binding PrevDayCommand}"/>
+            <Button Content="◀" Background="Transparent" BorderBrush="Transparent" Foreground="Gray" Command="{Binding PrevDayCommand}"/>
+            <TextBlock Text="{Binding Date, StringFormat='yyyy年MM月dd日(ddd)', ConverterCulture=ja-JP}" Margin="5,0,0,0" VerticalAlignment="Center" />
+            <DatePicker Text="{Binding Date, Mode=TwoWay}" Width="30" HorizontalAlignment="Left" VerticalAlignment="Center" Focusable="False" BorderBrush="Transparent" BorderThickness="0" />
+            <!--
+            <DatePicker Text="{Binding Date, Mode=TwoWay}" Width="130" HorizontalAlignment="Left" Margin="5" Focusable="False"  />
+            -->
+            <Button Content="▶" Background="Transparent" BorderBrush="Transparent" Foreground="Gray" Command="{Binding NextDayCommand}"/>
         </StackPanel>
         <DataGrid x:Name="taskLogDataGrid" ItemsSource="{Binding TaskLogs}"
             MaxHeight="400"
@@ -97,7 +101,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Binding="{Binding DownTimeMinutes, Mode=TwoWay}" ElementStyle="{StaticResource textCenter}" Header="中断"  Width="40"/>
-                <DataGridTextColumn Binding="{Binding WorkingMinutes, Converter={local:MinutesToHHMMConverter}}" ElementStyle="{StaticResource textCenter}" Header="時間"  Width="40" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding WorkingMinutes, Converter={local:MinutesToHHmmConverter}}" ElementStyle="{StaticResource textCenter}" Header="時間"  Width="40" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
         <Button Content="ログ追加" Command="{Binding AddLogCommand}"/>
