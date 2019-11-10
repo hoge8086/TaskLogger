@@ -65,11 +65,11 @@ namespace TaskLogger.Infrastructure
             {
                 logs = context.TaskLogs.ToList();
             }
-            else if(period is OneDayPeriod)
+            else if(period is DatePeriod)
             {
-                var p = period as OneDayPeriod;
-                if (p.Day == null) throw new ArgumentNullException("FindWithinPeriod:Date is null.");
-                logs = context.TaskLogs.Where(x => x.Start.Value.Year == p.Day.Year && x.Start.Value.Month == p.Day.Month && x.Start.Value.Day == p.Day.Day).ToList();
+                var p = period as DatePeriod;
+                if (p.Date == null) throw new ArgumentNullException("FindWithinPeriod:Date is null.");
+                logs = context.TaskLogs.Where(x => x.Start.Value.Year == p.Date.Year && x.Start.Value.Month == p.Date.Month && x.Start.Value.Day == p.Date.Day).ToList();
             }
             else if(period is PartialPeriod)
             {

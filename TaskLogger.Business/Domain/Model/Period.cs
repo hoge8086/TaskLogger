@@ -37,14 +37,14 @@ namespace TaskLogger.Business.Domain.Model
         }
     }
 
-    public class OneDayPeriod : Period {
-        public DateTime Day { get; set; }
+    public class DatePeriod : Period {
+        public DateTime Date { get; set; }
         public bool IsIn(DateTime? dateTime)
         {
             if (dateTime == null)
                 return false;
 
-            return Day.Year==dateTime.Value.Year && Day.Month==dateTime.Value.Month && Day.Day==dateTime.Value.Day;
+            return Date.Year==dateTime.Value.Year && Date.Month==dateTime.Value.Month && Date.Day==dateTime.Value.Day;
         }
     }
 }

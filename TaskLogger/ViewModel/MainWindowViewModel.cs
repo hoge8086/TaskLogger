@@ -8,6 +8,8 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Collections.ObjectModel;
 
+using TaskLogger.Business.Domain.Model;
+
 namespace TaskLogger.ViewModel
 {
 
@@ -28,6 +30,7 @@ namespace TaskLogger.ViewModel
                 if (value == _Date)
                     return;
                 _Date = value;
+                Update();
                 RaisePropertyChanged(nameof(Date));
             }
         }
@@ -39,10 +42,11 @@ namespace TaskLogger.ViewModel
             this.service = service;
             this.TaskLogs = new ObservableCollection<TaskLogViewModel>();
             this.RecentlyTaskNames = new ObservableCollection<string>();
+            this.Date = DateTime.Today;
             AddLogCommand = new DelegateCommand(
                     (_) =>
                     {
-                        var log = service.CreateTaskLog();
+                        var log = service.CreateTaskLog(Date);
                         TaskLogs.Add(new TaskLogViewModel(log.Id, service));
                     });
             DeleteLogCommand = new DelegateCommand(
@@ -60,7 +64,7 @@ namespace TaskLogger.ViewModel
         {
             //TaskLogs = new ObservableCollection<TaskLogViewModel>();
             TaskLogs.Clear();
-            var logs = service.AllTaskLogs();
+            var logs = service.TaskLogs(new DatePeriod() { Date = _Date });
             foreach (var log in logs)
             {
                 TaskLogs.Add(new TaskLogViewModel(log.Id, service));

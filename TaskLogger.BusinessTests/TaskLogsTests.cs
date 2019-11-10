@@ -29,7 +29,7 @@ namespace TaskLogger.Business.Tests
         public void CreateReport_OneLog_Test()
         {
             var report = logs.CreateReport(new ReportTarget() {
-                    Period = new OneDayPeriod { Day = DateTime.Parse("2000/1/1") },
+                    Period = new DatePeriod { Date = DateTime.Parse("2000/1/1") },
                     TargetTasks = new List<TaskSearchMethod>()
                     {
                         new TaskSearchMethod(){ TaskKeyword="STEP1 設計 検討", searchMethod=TaskSearchMethod.Method.PerfectMatch}
@@ -42,7 +42,7 @@ namespace TaskLogger.Business.Tests
         public void CreateReport_TwoLog_Test()
         {
             var report = logs.CreateReport(new ReportTarget() {
-                    Period = new OneDayPeriod { Day = DateTime.Parse("2000/1/1") },
+                    Period = new DatePeriod { Date = DateTime.Parse("2000/1/1") },
                     TargetTasks = new List<TaskSearchMethod>()
                     {
                         new TaskSearchMethod(){ TaskKeyword="STEP1 設計 外仕査読", searchMethod=TaskSearchMethod.Method.PerfectMatch}

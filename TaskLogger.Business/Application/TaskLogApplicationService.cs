@@ -9,16 +9,19 @@ namespace TaskLogger.Business.Application
 {
     public class TaskLogApplicationService
     {
-        public ITaskLogRepository taskLogRepository;
+        private ITaskLogRepository taskLogRepository;
+        private TaskLogFactory taskLogFactory; 
 
         public TaskLogApplicationService(ITaskLogRepository taskLogRepository)
         {
             this.taskLogRepository = taskLogRepository;
+            this.taskLogFactory = new TaskLogFactory(taskLogRepository);
         }
-        public TaskLog CreateTaskLog()
+        public TaskLog CreateTaskLog(DateTime logDate)
         {
-            var recentlyLogs = taskLogRepository.FindWithinPeriod(RecentlyPeriod);
-            var newTaskLog = new TaskLog(recentlyLogs);
+            //var recentlyLogs = taskLogRepository.FindWithinPeriod(RecentlyPeriod);
+            //var newTaskLog = new TaskLog(recentlyLogs);
+            var newTaskLog = taskLogFactory.Create(logDate);
             taskLogRepository.Add(newTaskLog);
             taskLogRepository.Save();
             return newTaskLog;
@@ -95,6 +98,11 @@ namespace TaskLogger.Business.Application
             return taskLogRepository.FindAll().Logs.AsReadOnly();
         }
 
+        public IList<TaskLog> TaskLogs(Period period)
+        {
+            return taskLogRepository.FindWithinPeriod(period).Logs.AsReadOnly();
+        }
+
         public TaskLog TaskLog(int id)
         {
             return taskLogRepository.FindByID(id);
@@ -108,10 +116,8 @@ namespace TaskLogger.Business.Application
 
         public List<string> RecentlyTaskNames()
         {
-            var logs = taskLogRepository.FindWithinPeriod(RecentlyPeriod);
+            var logs = taskLogRepository.FindWithinPeriod(new PartialPeriod() { StartDay = DateTime.Today, EndDay = DateTime.Today.AddDays(14)});
             return logs.TaskNamesByRecentlyOrder();
         }
-
-        private static readonly PartialPeriod RecentlyPeriod = new PartialPeriod() { StartDay = DateTime.Today, EndDay = DateTime.Today.AddDays(14)};
     }
 }

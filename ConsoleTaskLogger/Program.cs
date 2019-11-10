@@ -25,7 +25,7 @@ namespace ConsoleTaskLogger
 
                 if(string.Compare(cmd[0], "create", true) == 0)
                 {
-                    service.CreateTaskLog();
+                    service.CreateTaskLog(DateTime.Today);
                 }
                 else if(string.Compare(cmd[0], "all", true) == 0)
                 {

@@ -22,7 +22,7 @@
             <MenuItem Header="設定"/>
             <MenuItem Header="レポート生成" Click="MenuItem_Click"/>
         </Menu>
-        <DatePicker Text="{Binding Start, Mode=TwoWay}" Width="100" HorizontalAlignment="Left" BorderBrush="Transparent"/>
+        <DatePicker Text="{Binding Date, Mode=TwoWay}" Width="100" HorizontalAlignment="Left" Margin="5"/>
         <DataGrid x:Name="taskLogDataGrid" ItemsSource="{Binding TaskLogs}"
             AutoGenerateColumns="False"
             CanUserAddRows="False"

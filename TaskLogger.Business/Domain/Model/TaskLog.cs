@@ -74,21 +74,50 @@ namespace TaskLogger.Business.Domain.Model
         {
             Id = 0;
             TaskName = "";
-            Start = DateTime.Now;
+            Start = null;
             //End = null;
             DownTimeMinutes = 0;
             WorkingMinutes = null;
         }
 
-        public TaskLog(TaskLogs logs)
+        public TaskLog(string taskName, DateTime start)
         {
             Id = 0;
-            var recentTaskNames = logs.TaskNamesByRecentlyOrder();
-            TaskName = recentTaskNames.Count > 0 ? recentTaskNames[0] : "";
-            Start = DateTime.Now;
-            //End = null;
+            TaskName = taskName;
+            Start = start;
             DownTimeMinutes = 0;
             WorkingMinutes = null;
+        }
+        //public TaskLog(TaskLogs logs)
+        //{
+        //    Id = 0;
+        //    var recentTaskNames = logs.TaskNamesByRecentlyOrder();
+        //    TaskName = recentTaskNames.Count > 0 ? recentTaskNames[0] : "";
+        //    Start = DateTime.Now;
+        //    //End = null;
+        //    DownTimeMinutes = 0;
+        //    WorkingMinutes = null;
+        //}
+    }
+
+    public class TaskLogFactory
+    {
+        private ITaskLogRepository taskLogRepository;
+        public TaskLogFactory(ITaskLogRepository taskLogRepository)
+        {
+            this.taskLogRepository = taskLogRepository;
+        }
+        public TaskLog Create(DateTime logDateTime)
+        {
+            var recentlyTaskNames = taskLogRepository.FindWithinPeriod(new PartialPeriod() { StartDay = DateTime.Today, EndDay = DateTime.Today.AddDays(14)}).TaskNamesByRecentlyOrder();
+            string defaultTaskName= recentlyTaskNames.Count > 0 ? recentlyTaskNames[0] : "";
+            if(logDateTime.Date == DateTime.Today.Date)
+            {
+                return new TaskLog(defaultTaskName, DateTime.Now);
+            }
+            var logs = taskLogRepository.FindWithinPeriod(new DatePeriod() { Date = logDateTime });
+            var newTaskLog = new TaskLog(defaultTaskName, logs.LastTime() ?? new DateTime(logDateTime.Year, logDateTime.Month, logDateTime.Day, 8, 30, 0));
+            return newTaskLog;
         }
     }
 
@@ -147,6 +176,11 @@ namespace TaskLogger.Business.Domain.Model
                         .Select(x => x.TaskName)
                         .Distinct()
                         .ToList();
+        }
+
+        public DateTime? LastTime()
+        {
+            return Logs.Max(x => x.End);
         }
     }
 }
