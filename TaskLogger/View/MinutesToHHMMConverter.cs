@@ -22,10 +22,10 @@ namespace TaskLogger.View
                 return "";
 
             if (!(value is int)) throw new ArgumentException("not int");
-            int minutes = (int)value;
+            int minutes = Math.Abs((int)value);
             //if (minutes < 60)
             //    return minutes.ToString();
-            return string.Format("{0:D2}:{1:D2}", minutes / 60, minutes % 60);
+            return string.Format("{0}{1:D2}:{2:D2}", (int)value >= 0 ? "" : "-",  minutes / 60, minutes % 60);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
