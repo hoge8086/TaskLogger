@@ -116,7 +116,7 @@ namespace TaskLogger.Business.Application
 
         public List<string> RecentlyTaskNames()
         {
-            var logs = taskLogRepository.FindWithinPeriod(new PartialPeriod() { StartDay = DateTime.Today, EndDay = DateTime.Today.AddDays(14)});
+            var logs = taskLogRepository.FindWithinPeriod(new PartialPeriod() { EndDay = DateTime.Today, StartDay = DateTime.Today.AddDays(-14)});
             return logs.TaskNamesByRecentlyOrder();
         }
     }

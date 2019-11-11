@@ -49,7 +49,8 @@ namespace TaskLogger.ViewModel
                     (_) =>
                     {
                         var log = service.CreateTaskLog(Date);
-                        TaskLogs.Add(new TaskLogViewModel(log.Id, service));
+                        //TaskLogs.Add(new TaskLogViewModel(log.Id, service));
+                        Update();
                     });
             DeleteLogCommand = new DelegateCommand(
                     (x) =>

@@ -105,7 +105,7 @@ namespace TaskLogger.Business.Domain.Model
         }
         public TaskLog Create(DateTime logDateTime)
         {
-            var recentlyTaskNames = taskLogRepository.FindWithinPeriod(new PartialPeriod() { StartDay = DateTime.Today, EndDay = DateTime.Today.AddDays(14)}).TaskNamesByRecentlyOrder();
+            var recentlyTaskNames = taskLogRepository.FindWithinPeriod(new PartialPeriod() { EndDay = DateTime.Today, StartDay = DateTime.Today.AddDays(-14)}).TaskNamesByRecentlyOrder();
             string defaultTaskName= recentlyTaskNames.Count > 0 ? recentlyTaskNames[0] : "";
             if(logDateTime.Date == DateTime.Today.Date)
             {
@@ -163,7 +163,7 @@ namespace TaskLogger.Business.Domain.Model
 
         public DateTime? LastEndTime()
         {
-            return Logs.Max(x => x.End);
+            return Logs.Max(x => (x.End > x.Start ? x.End : x.Start));
         }
     }
 }

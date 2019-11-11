@@ -40,7 +40,7 @@ namespace TaskLogger.ViewModel
             Update();
         }
 
-        public void Update()//TaskLog taskLog)
+        public void Update()
         {
             var log = service.TaskLog(_Id);
             //this._Id = log.Id;
@@ -54,20 +54,11 @@ namespace TaskLogger.ViewModel
             RaisePropertyChanged(nameof(End));
             RaisePropertyChanged(nameof(DownTimeMinutes));
             RaisePropertyChanged(nameof(WorkingMinutes));
-
-            //RaisePropertyChanged();
         }
 
         public int Id
         {
             get { return _Id; }
-            //set
-            //{
-            //    if (value == _Id)
-            //        return;
-            //    _Id = value;
-            //    RaisePropertyChanged(nameof(Id));
-            //}
         }
         public string TaskName
         {
@@ -79,7 +70,6 @@ namespace TaskLogger.ViewModel
                 _TaskName = value;
                 service.ChangeTaskLogName(_Id, _TaskName);
                 Update();
-                //RaisePropertyChanged(nameof(TaskName));
             }
         }
 
@@ -93,8 +83,6 @@ namespace TaskLogger.ViewModel
                 _Start = value;
                 service.ChangeTaskLogStart(_Id, _Start);
                 Update();
-                //RaisePropertyChanged(nameof(Start));
-                //RaisePropertyChanged(nameof(WorkingMinutes));
             }
         }
         public DateTime? End
@@ -110,8 +98,6 @@ namespace TaskLogger.ViewModel
                     _End = null;
                 service.ChangeTaskLogEnd(_Id, _End.Value);
                 Update();
-                //RaisePropertyChanged(nameof(End));
-                //RaisePropertyChanged(nameof(WorkingMinutes));
             }
         }
         public int DownTimeMinutes
@@ -124,20 +110,11 @@ namespace TaskLogger.ViewModel
                 _DownTimeMinutes = value;
                 service.ChangeTaskLogDownTime(_Id, _DownTimeMinutes);
                 Update();
-                //service.ChangeTaskLogDownTime(_Id, _DownTimeMinutes);
-                //RaisePropertyChanged(nameof(DownTimeMinutes));
             }
         }
         public int? WorkingMinutes
         {
             get { return _WorkingMinutes; }
-            //set
-            //{
-            //    if (value == _WorkingMinutes)
-            //        return;
-            //    _WorkingMinutes = value;
-            //    RaisePropertyChanged(nameof(WorkingMinutes));
-            //}
         }
     }
 }
