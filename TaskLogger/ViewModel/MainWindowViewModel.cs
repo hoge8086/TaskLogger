@@ -80,7 +80,7 @@ namespace TaskLogger.ViewModel
             var logs = service.TaskLogs(new DatePeriod() { Date = _Date });
             foreach (var log in logs)
             {
-                TaskLogs.Add(new TaskLogViewModel(log.Id, service));
+                TaskLogs.Add(new TaskLogViewModel(log.Id, _Date, service));
             }
             RecentlyTaskNames.Clear();
             foreach(var tn in service.RecentlyTaskNames())

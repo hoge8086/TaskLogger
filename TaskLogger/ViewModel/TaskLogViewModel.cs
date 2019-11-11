@@ -12,6 +12,8 @@ namespace TaskLogger.ViewModel
         private void RaisePropertyChanged([CallerMemberName]string propertyName = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
+        //TODO:内部表現を時刻だけにするよう修正したほがよい
+        private DateTime _Date; //DataTimePickerとバインドするとに時刻のみ入力したときに、日付が勝手に変わってしまうので、日付けを持つ
         private int _Id;
         private string _TaskName;
         private DateTime _Start;
@@ -22,7 +24,7 @@ namespace TaskLogger.ViewModel
         public DelegateCommand EndNowCommand { get; }
         private TaskLogApplicationService service;
 
-        public TaskLogViewModel(int id, TaskLogApplicationService service)
+        public TaskLogViewModel(int id, DateTime date, TaskLogApplicationService service)
         {
             this.service = service;
             StartNowCommand = new DelegateCommand(
@@ -37,11 +39,13 @@ namespace TaskLogger.ViewModel
                 });
 
             _Id = id;
+            _Date = date;
             Update();
         }
 
         public void Update()
         {
+            //TODO:効率が悪いので何とかする
             var log = service.TaskLog(_Id);
             //this._Id = log.Id;
             this._TaskName = log.TaskName;
@@ -80,7 +84,7 @@ namespace TaskLogger.ViewModel
             {
                 if (value == _Start)
                     return;
-                _Start = value;
+                _Start = CorrectionDate(value);
                 service.ChangeTaskLogStart(_Id, _Start);
                 Update();
             }
@@ -93,7 +97,7 @@ namespace TaskLogger.ViewModel
                 if (value == _End)
                     return;
                 if (value != null)
-                    _End = new DateTime(Start.Year, Start.Month, Start.Day, value.Value.Hour, value.Value.Minute, 0);
+                    _End = CorrectionDate(value.Value);
                 else
                     _End = null;
                 service.ChangeTaskLogEnd(_Id, _End.Value);
@@ -115,6 +119,11 @@ namespace TaskLogger.ViewModel
         public int? WorkingMinutes
         {
             get { return _WorkingMinutes; }
+        }
+
+        private DateTime CorrectionDate(DateTime dateTime)
+        {
+            return new DateTime(_Date.Year, _Date.Month, _Date.Day, dateTime.Hour, dateTime.Minute, 0);
         }
     }
 }
