@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:TaskLogger.View"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="ReportWindow" Height="300" Width="300">
+        Title="ReportWindow" Width="500" SizeToContent="Height">
     <Window.Resources>
         <Style x:Key="textCenter" TargetType="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Center" />
@@ -24,10 +24,34 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
     </Window.Resources>
-    <StackPanel>
-        <StackPanel Orientation="Horizontal" Margin="5">
-            <TextBlock Text="レポート期間："/>
-            <ComboBox x:Name="peridoComb" Width="70" ItemsSource="{StaticResource dateType}" SelectedIndex="0" HorizontalContentAlignment="Center" />
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Column="0" Grid.Row="0" Text="レポート期間：" Margin="5,5,0,0"/>
+        <ComboBox Grid.Column="1" Grid.Row="0" Margin="0,5,0,0"
+            HorizontalAlignment="Left"
+            x:Name="peridoComb" Width="100" ItemsSource="{StaticResource dateType}" SelectedIndex="0" HorizontalContentAlignment="Center" />
+        <StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal" Margin="0,5,0,0">
+            <StackPanel.Style>
+                <Style TargetType="{x:Type StackPanel}">
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=peridoComb, Path=SelectedIndex}" Value="2">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </StackPanel.Style>
             <DatePicker Text="{Binding Start, Mode=TwoWay}" Width="100" HorizontalAlignment="Left" BorderBrush="Transparent">
                 <DatePicker.Style>
                     <Style TargetType="{x:Type DatePicker}">
@@ -54,18 +78,17 @@
                 <DatePicker Text="{Binding Start, Mode=TwoWay}" Width="100" HorizontalAlignment="Left" BorderBrush="Transparent"/>
             </StackPanel>
         </StackPanel>
-        <StackPanel Orientation="Horizontal" Margin="5,0,5,5">
-            <TextBlock Text="出力タスク："/>
-            <ComboBox  SelectedIndex="0" HorizontalContentAlignment="Center">
-                <ComboBox.ItemsSource>
-                <x:Array Type="{x:Type sys:String}">
-                    <sys:String>全てのタスク</sys:String>
-                    <sys:String>指定</sys:String>
-                </x:Array>
-                </ComboBox.ItemsSource>
-            </ComboBox>
-        </StackPanel>
-        <DataGrid ItemsSource="{Binding TaskLogs}"
+        <TextBlock Grid.Column="0" Grid.Row="1" Text="出力タスク：" Margin="5,5,0,0"/>
+        <ComboBox Grid.Column="1" Grid.Row="1" SelectedIndex="0" HorizontalContentAlignment="Center" Margin="0,5,0,0">
+            <ComboBox.ItemsSource>
+            <x:Array Type="{x:Type sys:String}">
+                <sys:String>全てのタスク</sys:String>
+                <sys:String>指定</sys:String>
+            </x:Array>
+            </ComboBox.ItemsSource>
+        </ComboBox>
+        <DataGrid Grid.Column="0" Grid.Row="2" Margin="0,5,0,0"
+          Grid.ColumnSpan="3" ItemsSource="{Binding TaskLogs}"
             AutoGenerateColumns="False"
             CanUserAddRows="False"
             VerticalGridLinesBrush="Gray"
@@ -89,6 +112,6 @@
                 <DataGridTextColumn Binding="{Binding WorkingMinutes}" ElementStyle="{StaticResource textCenter}" CellStyle="{StaticResource notFocusable}" Header="時間"  Width="60" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Button Content="出力" HorizontalAlignment="Right" Padding="15,0,15,0" Margin="5"/>
-    </StackPanel>
+        <Button Grid.Column="2" Grid.Row="3" Content="出力" HorizontalAlignment="Right" Padding="15,0,15,0" Margin="5"/>
+    </Grid>
 </Window>
