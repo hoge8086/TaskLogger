@@ -4,6 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TaskLogger.View"
+        xmlns:vm="clr-namespace:TaskLogger.ViewModel"
+        xmlns:m="clr-namespace:TaskLogger.Business.Domain.Model;assembly=TaskLogger.Business"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="ReportWindow" Width="500" SizeToContent="Height">
@@ -23,6 +25,24 @@
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
+        <ObjectDataProvider x:Key="periodTypes" MethodName="GetValues" 
+                            ObjectType="{x:Type sys:Enum}"> 
+            <ObjectDataProvider.MethodParameters> 
+                <x:Type TypeName="vm:PeriodType"/> 
+            </ObjectDataProvider.MethodParameters> 
+        </ObjectDataProvider> 
+        <ObjectDataProvider x:Key="specifyTaskMethods" MethodName="GetValues" 
+                            ObjectType="{x:Type sys:Enum}"> 
+            <ObjectDataProvider.MethodParameters> 
+                <x:Type TypeName="vm:SpecifyTaskMethod"/> 
+            </ObjectDataProvider.MethodParameters> 
+        </ObjectDataProvider> 
+        <ObjectDataProvider x:Key="taskSearchMethods" MethodName="GetValues" 
+                            ObjectType="{x:Type sys:Enum}"> 
+            <ObjectDataProvider.MethodParameters> 
+                <x:Type TypeName="m:TaskSearchMethodType"/> 
+            </ObjectDataProvider.MethodParameters> 
+        </ObjectDataProvider> 
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -40,7 +60,16 @@
         <TextBlock Grid.Column="0" Grid.Row="0" Text="レポート期間：" Margin="5,5,0,0"/>
         <ComboBox Grid.Column="1" Grid.Row="0" Margin="0,5,0,0"
             HorizontalAlignment="Left"
-            x:Name="peridoComb" Width="100" ItemsSource="{StaticResource dateType}" SelectedIndex="0" HorizontalContentAlignment="Center" />
+            x:Name="peridoComb" Width="100" ItemsSource="{Binding Source={StaticResource periodTypes}}"
+            HorizontalContentAlignment="Center"
+            SelectedItem="{Binding PeriodType}">
+            <!--https://qiita.com/inabe49/items/ff16344af627d039da73-->
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={local:EnumToStringConverter}}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
         <StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal" Margin="0,5,0,0">
             <StackPanel.Style>
                 <Style TargetType="{x:Type StackPanel}">
@@ -79,13 +108,15 @@
             </StackPanel>
         </StackPanel>
         <TextBlock Grid.Column="0" Grid.Row="1" Text="出力タスク：" Margin="5,5,0,0"/>
-        <ComboBox Grid.Column="1" Grid.Row="1" SelectedIndex="0" HorizontalContentAlignment="Center" Margin="0,5,0,0">
-            <ComboBox.ItemsSource>
-            <x:Array Type="{x:Type sys:String}">
-                <sys:String>全てのタスク</sys:String>
-                <sys:String>指定</sys:String>
-            </x:Array>
-            </ComboBox.ItemsSource>
+        <ComboBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Source={StaticResource specifyTaskMethods}}"
+            HorizontalContentAlignment="Center" Margin="0,5,0,0"
+            SelectedItem="{Binding PeriodType}">
+            <!--https://qiita.com/inabe49/items/ff16344af627d039da73-->
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={local:EnumToStringConverter}}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
         </ComboBox>
         <DataGrid Grid.Column="0" Grid.Row="2" Margin="0,5,0,0"
           Grid.ColumnSpan="3" ItemsSource="{Binding TaskLogs}"

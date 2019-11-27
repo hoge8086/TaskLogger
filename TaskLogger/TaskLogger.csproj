@@ -53,6 +53,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModel\PeriodViewModel.cs" />
+    <Compile Include="ViewModel\ReportWindowViewModel.cs" />
+    <Compile Include="View\EnumConverter.cs" />
     <Compile Include="View\MinutesToHHMMConverter.cs" />
     <Compile Include="View\ReportWindow.xaml.cs">
       <DependentUpon>ReportWindow.xaml</DependentUpon>

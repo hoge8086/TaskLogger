@@ -39,7 +39,7 @@ namespace TaskLogger.Business.Tests
                     Period = new DatePeriod { Date = DateTime.Parse("2000/1/1") },
                     TargetTasks = new List<TaskSearchMethod>()
                     {
-                        new TaskSearchMethod(){ TaskKeyword="STEP1 設計 検討", searchMethod=TaskSearchMethod.Method.PerfectMatch}
+                        new TaskSearchMethod(){ TaskKeyword="STEP1 設計 検討", searchMethod=TaskSearchMethodType.PerfectMatch}
                     }
                 });
             Assert.AreEqual(1, report.Items.Count);
@@ -52,7 +52,7 @@ namespace TaskLogger.Business.Tests
                     Period = new DatePeriod { Date = DateTime.Parse("2000/1/1") },
                     TargetTasks = new List<TaskSearchMethod>()
                     {
-                        new TaskSearchMethod(){ TaskKeyword="STEP1 設計 外仕査読", searchMethod=TaskSearchMethod.Method.PerfectMatch}
+                        new TaskSearchMethod(){ TaskKeyword="STEP1 設計 外仕査読", searchMethod=TaskSearchMethodType.PerfectMatch}
                     }
                 });
             Assert.AreEqual(1, report.Items.Count);
@@ -65,7 +65,7 @@ namespace TaskLogger.Business.Tests
                     Period = new PartialPeriod{ StartDay= DateTime.Parse("2000/1/1"), EndDay=DateTime.Parse("2000/1/2")},
                     TargetTasks = new List<TaskSearchMethod>()
                     {
-                        new TaskSearchMethod(){ TaskKeyword="STEP1 設計 検討", searchMethod=TaskSearchMethod.Method.PerfectMatch}
+                        new TaskSearchMethod(){ TaskKeyword="STEP1 設計 検討", searchMethod=TaskSearchMethodType.PerfectMatch}
                     }
                 });
             Assert.AreEqual(1, report.Items.Count);
@@ -78,7 +78,7 @@ namespace TaskLogger.Business.Tests
                     Period = new WholePeriod(),
                     TargetTasks = new List<TaskSearchMethod>()
                     {
-                        new TaskSearchMethod(){ TaskKeyword="STEP1 設計 検討", searchMethod=TaskSearchMethod.Method.PerfectMatch}
+                        new TaskSearchMethod(){ TaskKeyword="STEP1 設計 検討", searchMethod=TaskSearchMethodType.PerfectMatch}
                     }
                 });
             Assert.AreEqual(1, report.Items.Count);
@@ -92,7 +92,7 @@ namespace TaskLogger.Business.Tests
                     Period = new WholePeriod(),
                     TargetTasks = new List<TaskSearchMethod>()
                     {
-                        new TaskSearchMethod(){ TaskKeyword="STEP1", searchMethod=TaskSearchMethod.Method.FirstMatch}
+                        new TaskSearchMethod(){ TaskKeyword="STEP1", searchMethod=TaskSearchMethodType.FirstMatch}
                     }
                 });
             Assert.AreEqual(1, report.Items.Count);
@@ -106,7 +106,7 @@ namespace TaskLogger.Business.Tests
                     Period = new WholePeriod(),
                     TargetTasks = new List<TaskSearchMethod>()
                     {
-                        new TaskSearchMethod(){ TaskKeyword="調査", searchMethod=TaskSearchMethod.Method.PartialMatch}
+                        new TaskSearchMethod(){ TaskKeyword="調査", searchMethod=TaskSearchMethodType.PartialMatch}
                     }
                 });
             Assert.AreEqual(1, report.Items.Count);
@@ -119,7 +119,7 @@ namespace TaskLogger.Business.Tests
                     Period = new WholePeriod(),
                     TargetTasks = new List<TaskSearchMethod>()
                     {
-                        new TaskSearchMethod(){ TaskKeyword="調査|外仕査読", searchMethod=TaskSearchMethod.Method.RegexpMatch}
+                        new TaskSearchMethod(){ TaskKeyword="調査|外仕査読", searchMethod=TaskSearchMethodType.RegexpMatch}
                     }
                 });
             Assert.AreEqual(1, report.Items.Count);
@@ -132,8 +132,8 @@ namespace TaskLogger.Business.Tests
                     Period = new WholePeriod(),
                     TargetTasks = new List<TaskSearchMethod>()
                     {
-                        new TaskSearchMethod(){ TaskKeyword="STEP1 設計 検討", searchMethod=TaskSearchMethod.Method.PerfectMatch},
-                        new TaskSearchMethod(){ TaskKeyword="STEP1", searchMethod=TaskSearchMethod.Method.FirstMatch}
+                        new TaskSearchMethod(){ TaskKeyword="STEP1 設計 検討", searchMethod=TaskSearchMethodType.PerfectMatch},
+                        new TaskSearchMethod(){ TaskKeyword="STEP1", searchMethod=TaskSearchMethodType.FirstMatch}
                     }
                 });
             Assert.AreEqual(2, report.Items.Count);
