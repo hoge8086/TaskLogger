@@ -28,6 +28,7 @@ namespace TaskLogger.ViewModel
         private TaskLogApplicationService service;
 
         public DelegateCommand ReportCommand { get; set; }
+        public DelegateCommand AddRowCommand { get; set; }
 
         private PeriodViewModel _Period;
         public PeriodViewModel Period
@@ -101,6 +102,11 @@ namespace TaskLogger.ViewModel
                         }
                         Update(report);
                     });
+            AddRowCommand = new DelegateCommand(
+                (_) =>
+                {
+                    TaskReports.Add(new TaskReportItemViewModel());
+                });
             //Update();
         }
         private List<TaskSearchMethod> CreateTaskSearhMethods()
