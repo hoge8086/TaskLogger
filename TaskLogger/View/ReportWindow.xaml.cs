@@ -11,6 +11,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using TaskLogger.Business.Application;
+using TaskLogger.ViewModel;
 
 namespace TaskLogger.View
 {
@@ -22,6 +24,7 @@ namespace TaskLogger.View
         public ReportWindow()
         {
             InitializeComponent();
+            this.DataContext = new ReportWindowViewModel(((App)App.Current).TaskLogApplicationService);
         }
     }
 }

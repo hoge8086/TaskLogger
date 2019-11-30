@@ -41,29 +41,29 @@ namespace TaskLogger.ViewModel
                 RaisePropertyChanged(nameof(Period));
             }
         }
-        private SpecifyTaskMethod _CurrentSpecifyTaskMethod;
-        public SpecifyTaskMethod CurrentSpecifyTaskMethod
+        private SpecifyTaskMethod _SpecifyTaskMethod;
+        public SpecifyTaskMethod SpecifyTaskMethod
         {
-            get { return _CurrentSpecifyTaskMethod; }
+            get { return _SpecifyTaskMethod; }
             set
             {
-                if (value == _CurrentSpecifyTaskMethod)
+                if (value == _SpecifyTaskMethod)
                     return;
-                _CurrentSpecifyTaskMethod = value;
-                RaisePropertyChanged(nameof(CurrentSpecifyTaskMethod));
+                _SpecifyTaskMethod = value;
+                RaisePropertyChanged(nameof(SpecifyTaskMethod));
             }
         }
 
-        private PeriodType _SelectedPeriodType;
-        public PeriodType SelectedPeriodType
+        private PeriodType _PeriodType;
+        public PeriodType PeriodType
         {
-            get { return _SelectedPeriodType; }
+            get { return _PeriodType; }
             set
             {
-                if (value == _SelectedPeriodType)
+                if (value == _PeriodType)
                     return;
-                _SelectedPeriodType = value;
-                switch(_SelectedPeriodType)
+                _PeriodType = value;
+                switch(_PeriodType)
                 {
                     case PeriodType.DatePeriod:
                         Period = new DatePeriodViewModel();
@@ -75,7 +75,7 @@ namespace TaskLogger.ViewModel
                         Period = new WholePeriodViewModel();
                         break;
                 }
-                RaisePropertyChanged(nameof(SelectedPeriodType));
+                RaisePropertyChanged(nameof(PeriodType));
             }
         }
 
@@ -90,6 +90,8 @@ namespace TaskLogger.ViewModel
                         var log = service.CreateReport(new ReportTarget());
                         Update();
                     });
+            PeriodType = PeriodType.DatePeriod;
+            SpecifyTaskMethod = SpecifyTaskMethod.AllTasks;
             Update();
         }
 

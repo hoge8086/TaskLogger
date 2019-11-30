@@ -27,10 +27,7 @@ namespace TaskLogger.View
         public MainWindow()
         {
             InitializeComponent();
-            var context = new TaskLogContext();
-            var rep = new TaskLogRepository(context);
-            var service = new TaskLogApplicationService(rep);
-            this.DataContext = new MainWindowViewModel(service);
+            this.DataContext = new MainWindowViewModel(((App)App.Current).TaskLogApplicationService);
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)

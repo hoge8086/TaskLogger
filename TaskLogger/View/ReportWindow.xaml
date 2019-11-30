@@ -110,7 +110,7 @@
         <TextBlock Grid.Column="0" Grid.Row="1" Text="出力タスク：" Margin="5,5,0,0"/>
         <ComboBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Source={StaticResource specifyTaskMethods}}"
             HorizontalContentAlignment="Center" Margin="0,5,0,0"
-            SelectedItem="{Binding PeriodType}">
+            SelectedItem="{Binding SpecifyTaskMethod}">
             <!--https://qiita.com/inabe49/items/ff16344af627d039da73-->
             <ComboBox.ItemTemplate>
                 <DataTemplate>
