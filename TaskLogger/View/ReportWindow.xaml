@@ -46,11 +46,11 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Column="0" Grid.Row="0" Text="レポート期間：" Margin="5,5,0,0"/>
         <ComboBox Grid.Column="1" Grid.Row="0" Margin="0,5,0,0"
@@ -65,43 +65,22 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
-        <StackPanel Grid.Column="2" Grid.Row="0" Orientation="Horizontal" Margin="0,5,0,0">
-            <StackPanel.Style>
-                <Style TargetType="{x:Type StackPanel}">
-                    <Setter Property="Visibility" Value="Visible"/>
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding ElementName=peridoComb, Path=SelectedIndex}" Value="2">
-                            <Setter Property="Visibility" Value="Collapsed"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </StackPanel.Style>
-            <DatePicker Text="{Binding Start, Mode=TwoWay}" Width="100" HorizontalAlignment="Left" BorderBrush="Transparent">
-                <DatePicker.Style>
-                    <Style TargetType="{x:Type DatePicker}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding ElementName=peridoComb, Path=SelectedIndex}" Value="2">
-                                <Setter Property="Visibility" Value="Collapsed"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </DatePicker.Style>
-            </DatePicker>
-            <StackPanel Orientation="Horizontal">
-                <StackPanel.Style>
-                    <Style TargetType="{x:Type StackPanel}">
-                        <Setter Property="Visibility" Value="Collapsed"/>
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding ElementName=peridoComb, Path=SelectedIndex}" Value="1">
-                                <Setter Property="Visibility" Value="Visible"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </StackPanel.Style>
-                <TextBlock Text="～" VerticalAlignment="Center"/>
-                <DatePicker Text="{Binding Start, Mode=TwoWay}" Width="100" HorizontalAlignment="Left" BorderBrush="Transparent"/>
-            </StackPanel>
-        </StackPanel>
+        <ContentControl Grid.Column="2" Grid.Row="0" Margin="0,5,0,0" Content="{Binding Period}">
+            <ContentControl.Resources>
+                <DataTemplate DataType="{x:Type vm:WholePeriodViewModel}">
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:PartialPeriodViewModel}">
+                    <StackPanel Orientation="Horizontal">
+                        <DatePicker Text="{Binding Start, Mode=TwoWay}" Width="100" HorizontalAlignment="Left" BorderBrush="Transparent"/>
+                        <TextBlock Text="～" VerticalAlignment="Center"/>
+                        <DatePicker Text="{Binding End, Mode=TwoWay}" Width="100" HorizontalAlignment="Left" BorderBrush="Transparent"/>
+                    </StackPanel>
+                </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:DatePeriodViewModel}">
+                    <DatePicker Text="{Binding Date, Mode=TwoWay}" Width="100" HorizontalAlignment="Left" BorderBrush="Transparent"/>
+                </DataTemplate>
+            </ContentControl.Resources>
+        </ContentControl>
         <TextBlock Grid.Column="0" Grid.Row="1" Text="出力タスク：" Margin="5,5,0,0"/>
         <ComboBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Source={StaticResource specifyTaskMethods}}"
             HorizontalContentAlignment="Center" Margin="0,5,0,0"
