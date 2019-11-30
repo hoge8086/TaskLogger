@@ -133,6 +133,12 @@ namespace TaskLogger.ViewModel
         private TaskSearchMethodType _TaskSearchMethodType;
         private int? _WorkingMinutes;
 
+        public TaskReportItemViewModel()
+        {
+            this.TaskName = "";
+            this.TaskSearchMethodType = TaskSearchMethodType.FirstMatch;
+            this.WorkingMinutes = 0;
+        }
         public TaskReportItemViewModel(
             string TaskName,
             TaskSearchMethodType TaskSearchMethod,

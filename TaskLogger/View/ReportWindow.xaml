@@ -82,7 +82,7 @@
             </ContentControl.Resources>
         </ContentControl>
         <TextBlock Grid.Column="0" Grid.Row="1" Text="出力タスク：" Margin="5,5,0,0"/>
-        <ComboBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Source={StaticResource specifyTaskMethods}}"
+        <ComboBox x:Name="specifyTaskComb" Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Source={StaticResource specifyTaskMethods}}"
             HorizontalContentAlignment="Center" Margin="0,5,0,0"
             SelectedItem="{Binding SpecifyTaskMethod}">
             <!--https://qiita.com/inabe49/items/ff16344af627d039da73-->
@@ -95,13 +95,27 @@
         <DataGrid Grid.Column="0" Grid.Row="2" Margin="0,5,0,0"
           Grid.ColumnSpan="3" ItemsSource="{Binding TaskReports}"
             AutoGenerateColumns="False"
-            CanUserAddRows="False"
             VerticalGridLinesBrush="Gray"
             HorizontalGridLinesBrush="Gray"
-            SelectionUnit="Cell"
             HeadersVisibility="Column"
             HorizontalContentAlignment="Center"
             VerticalContentAlignment="Center">
+            <DataGrid.Style>
+                <Style TargetType="{x:Type DataGrid}">
+                    <!--デフォのすべてのタスクの場合は編集不可-->
+                    <Setter Property="CanUserAddRows" Value="False"/>
+                    <Setter Property="CanUserDeleteRows" Value="False"/>
+                    <Setter Property="IsReadOnly" Value="True"/>
+                    <Style.Triggers>
+                        <!--タスク指定の場合は編集可-->
+                        <DataTrigger Binding="{Binding ElementName=specifyTaskComb, Path=SelectedItem}" Value="{x:Static vm:SpecifyTaskMethod.SpecifyTask}">
+                            <Setter Property="CanUserAddRows" Value="True"/>
+                            <Setter Property="CanUserDeleteRows" Value="True"/>
+                            <Setter Property="IsReadOnly" Value="False"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Style>
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding TaskName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Header="タスク名"  Width="*"/>
                 <DataGridTemplateColumn IsReadOnly="True" Header="検索方法"  Width="100">
@@ -115,6 +129,22 @@
                                         <TextBlock Text="{Binding Converter={local:EnumToStringConverter}}"/>
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
+                                <ComboBox.Style>
+                                    <Style TargetType="{x:Type ComboBox}">
+                                        <!--デフォのすべてのタスクの場合は編集不可-->
+                                        <Setter Property="IsReadOnly" Value="False"/>
+                                        <Setter Property="IsTabStop" Value="False"/>
+                                        <Setter Property="IsHitTestVisible" Value="False"/>
+                                        <Style.Triggers>
+                                            <!--タスク指定の場合は編集可-->
+                                            <DataTrigger Binding="{Binding ElementName=specifyTaskComb, Path=SelectedItem}" Value="{x:Static vm:SpecifyTaskMethod.SpecifyTask}">
+                                                <Setter Property="IsReadOnly" Value="True"/>
+                                                <Setter Property="IsTabStop" Value="True"/>
+                                                <Setter Property="IsHitTestVisible" Value="True"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ComboBox.Style>
                             </ComboBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
