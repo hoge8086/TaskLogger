@@ -40,153 +40,170 @@
         </ObjectDataProvider> 
     </Window.Resources>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="80"/>
-            <ColumnDefinition Width="100"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <TextBlock Grid.Column="0" Grid.Row="0" Text="レポート期間：" Margin="5,5,0,0" VerticalAlignment="Center"/>
-        <ComboBox Grid.Column="1" Grid.Row="0" Margin="0,5,0,0"
-            VerticalAlignment="Center"
-            HorizontalAlignment="Left"
-            x:Name="peridoComb" Width="100" ItemsSource="{Binding Source={StaticResource periodTypes}}"
-            HorizontalContentAlignment="Center"
-            SelectedItem="{Binding PeriodType}">
-            <!--https://qiita.com/inabe49/items/ff16344af627d039da73-->
-            <ComboBox.ItemTemplate>
+        <!--プラスボタンの方法?-->
+        <!--https://social.msdn.microsoft.com/Forums/lync/en-US/1c30f3c9-f031-424d-8d13-f1b8749f8123/add-buttons-to-the-tab-control-header?forum=wpf-->
+        <TabControl
+            ItemsSource="{Binding Reports}"
+            SelectedIndex="0">
+            <TabControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Converter={local:EnumToStringConverter}}"/>
+                    <TextBox Text="{Binding Title}" BorderBrush="Transparent"/>
                 </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
-        <ContentControl Grid.Column="2" Grid.Row="0" Margin="0,5,0,0" Content="{Binding Period}">
-            <ContentControl.Resources>
-                <DataTemplate DataType="{x:Type vm:WholePeriodViewModel}">
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type vm:PartialPeriodViewModel}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Start, StringFormat='yyyy年MM月dd日(ddd)', ConverterCulture=ja-JP}" Margin="5,0,0,0" VerticalAlignment="Center" />
-                        <DatePicker Text="{Binding Start, Mode=TwoWay}" Width="30" HorizontalAlignment="Left" VerticalAlignment="Center" Focusable="False" BorderBrush="Transparent" BorderThickness="0" />
-                        <TextBlock Text="～" VerticalAlignment="Center"/>
-                        <TextBlock Text="{Binding End, StringFormat='yyyy年MM月dd日(ddd)', ConverterCulture=ja-JP}" Margin="5,0,0,0" VerticalAlignment="Center" />
-                        <DatePicker Text="{Binding End, Mode=TwoWay}" Width="30" HorizontalAlignment="Left" VerticalAlignment="Center" Focusable="False" BorderBrush="Transparent" BorderThickness="0" />
-                    </StackPanel>
-                </DataTemplate>
-                <DataTemplate DataType="{x:Type vm:DatePeriodViewModel}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Date, StringFormat='yyyy年MM月dd日(ddd)', ConverterCulture=ja-JP}" Margin="5,0,0,0" VerticalAlignment="Center" />
-                        <DatePicker Text="{Binding Date, Mode=TwoWay}" Width="30" HorizontalAlignment="Left" VerticalAlignment="Center" Focusable="False" BorderBrush="Transparent" BorderThickness="0" />
-                    </StackPanel>
-                </DataTemplate>
-            </ContentControl.Resources>
-        </ContentControl>
-        <TextBlock Grid.Column="0" Grid.Row="1" Text="出力タスク：" Margin="5,5,0,0" VerticalAlignment="Center"/>
-        <ComboBox x:Name="specifyTaskComb" Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Source={StaticResource specifyTaskMethods}}"
-            HorizontalContentAlignment="Center" Margin="0,5,0,0"
-            SelectedItem="{Binding SpecifyTaskMethod}">
-            <!--https://qiita.com/inabe49/items/ff16344af627d039da73-->
-            <ComboBox.ItemTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Converter={local:EnumToStringConverter}}"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="80"/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Column="0" Grid.Row="0" Text="レポート期間：" Margin="5,5,0,0" VerticalAlignment="Center"/>
+                        <ComboBox Grid.Column="1" Grid.Row="0" Margin="0,5,0,0"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Left"
+                            x:Name="peridoComb" Width="100" ItemsSource="{Binding Source={StaticResource periodTypes}}"
+                            HorizontalContentAlignment="Center"
+                            SelectedItem="{Binding PeriodType}">
+                            <!--https://qiita.com/inabe49/items/ff16344af627d039da73-->
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={local:EnumToStringConverter}}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <ContentControl Grid.Column="2" Grid.Row="0" Margin="0,5,0,0" Content="{Binding Period}">
+                            <ContentControl.Resources>
+                                <DataTemplate DataType="{x:Type vm:WholePeriodViewModel}">
+                                </DataTemplate>
+                                <DataTemplate DataType="{x:Type vm:PartialPeriodViewModel}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Start, StringFormat='yyyy年MM月dd日(ddd)', ConverterCulture=ja-JP}" Margin="5,0,0,0" VerticalAlignment="Center" />
+                                        <DatePicker Text="{Binding Start, Mode=TwoWay}" Width="30" HorizontalAlignment="Left" VerticalAlignment="Center" Focusable="False" BorderBrush="Transparent" BorderThickness="0" />
+                                        <TextBlock Text="～" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding End, StringFormat='yyyy年MM月dd日(ddd)', ConverterCulture=ja-JP}" Margin="5,0,0,0" VerticalAlignment="Center" />
+                                        <DatePicker Text="{Binding End, Mode=TwoWay}" Width="30" HorizontalAlignment="Left" VerticalAlignment="Center" Focusable="False" BorderBrush="Transparent" BorderThickness="0" />
+                                    </StackPanel>
+                                </DataTemplate>
+                                <DataTemplate DataType="{x:Type vm:DatePeriodViewModel}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Date, StringFormat='yyyy年MM月dd日(ddd)', ConverterCulture=ja-JP}" Margin="5,0,0,0" VerticalAlignment="Center" />
+                                        <DatePicker Text="{Binding Date, Mode=TwoWay}" Width="30" HorizontalAlignment="Left" VerticalAlignment="Center" Focusable="False" BorderBrush="Transparent" BorderThickness="0" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ContentControl.Resources>
+                        </ContentControl>
+                        <TextBlock Grid.Column="0" Grid.Row="1" Text="出力タスク：" Margin="5,5,0,0" VerticalAlignment="Center"/>
+                        <ComboBox x:Name="specifyTaskComb" Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Source={StaticResource specifyTaskMethods}}"
+                            HorizontalContentAlignment="Center" Margin="0,5,0,0"
+                            SelectedItem="{Binding SpecifyTaskMethod}">
+                            <!--https://qiita.com/inabe49/items/ff16344af627d039da73-->
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Converter={local:EnumToStringConverter}}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <TextBlock Grid.Column="2" Grid.Row="1" Margin="10,5,0,0" Foreground="Red" Text="※グリッドは編集不可です" VerticalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <!--デフォのすべてのタスクの場合は編集不可-->
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Style.Triggers>
+                                        <!--タスク指定の場合は編集可-->
+                                        <DataTrigger Binding="{Binding ElementName=specifyTaskComb, Path=SelectedItem}" Value="{x:Static vm:SpecifyTaskMethod.SpecifyTask}">
+                                            <Setter Property="Visibility" Value="Hidden"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        <Button Grid.Column="2" Grid.Row="1" Content="行追加" Padding="15,0,15,0" HorizontalAlignment="Left" Margin="10,5,0,0" Command="{Binding AddRowCommand}">
+                            <Button.Style>
+                                <Style TargetType="{x:Type Button}">
+                                    <!--デフォのすべてのタスクの場合は編集不可-->
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                    <Setter Property="Visibility" Value="Hidden"/>
+                                    <Style.Triggers>
+                                        <!--タスク指定の場合は編集可-->
+                                        <DataTrigger Binding="{Binding ElementName=specifyTaskComb, Path=SelectedItem}" Value="{x:Static vm:SpecifyTaskMethod.SpecifyTask}">
+                                            <Setter Property="IsEnabled" Value="True"/>
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <DataGrid Grid.Column="0" Grid.Row="2" Margin="0,5,0,0"
+                          Grid.ColumnSpan="3" ItemsSource="{Binding TaskReports}"
+                            AutoGenerateColumns="False"
+                            CanUserAddRows="False"
+                            VerticalGridLinesBrush="Gray"
+                            HorizontalGridLinesBrush="Gray"
+                            HeadersVisibility="Column"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center">
+                            <DataGrid.Style>
+                                <Style TargetType="{x:Type DataGrid}">
+                                    <!--デフォのすべてのタスクの場合は編集不可-->
+                                    <Setter Property="CanUserDeleteRows" Value="False"/>
+                                    <Setter Property="IsReadOnly" Value="True"/>
+                                    <Style.Triggers>
+                                        <!--タスク指定の場合は編集可-->
+                                        <DataTrigger Binding="{Binding ElementName=specifyTaskComb, Path=SelectedItem}" Value="{x:Static vm:SpecifyTaskMethod.SpecifyTask}">
+                                            <Setter Property="CanUserDeleteRows" Value="True"/>
+                                            <Setter Property="IsReadOnly" Value="False"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding TaskName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Header="タスク名"  Width="*"/>
+                                <DataGridTemplateColumn IsReadOnly="True" Header="検索方法"  Width="100">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ComboBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Source={StaticResource taskSearchMethods}}"
+                                                HorizontalContentAlignment="Center"
+                                                SelectedItem="{Binding TaskSearchMethodType, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding Converter={local:EnumToStringConverter}}"/>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                                <ComboBox.Style>
+                                                    <Style TargetType="{x:Type ComboBox}">
+                                                        <!--デフォのすべてのタスクの場合は編集不可-->
+                                                        <Setter Property="IsReadOnly" Value="False"/>
+                                                        <Setter Property="IsTabStop" Value="False"/>
+                                                        <Setter Property="IsHitTestVisible" Value="False"/>
+                                                        <Style.Triggers>
+                                                            <!--タスク指定の場合は編集可-->
+                                                            <DataTrigger Binding="{Binding ElementName=specifyTaskComb, Path=SelectedItem}" Value="{x:Static vm:SpecifyTaskMethod.SpecifyTask}">
+                                                                <Setter Property="IsReadOnly" Value="True"/>
+                                                                <Setter Property="IsTabStop" Value="True"/>
+                                                                <Setter Property="IsHitTestVisible" Value="True"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </ComboBox.Style>
+                                            </ComboBox>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Binding="{Binding WorkingMinutes, Converter={local:MinutesToHHmmConverter}}" ElementStyle="{StaticResource textCenter}" CellStyle="{StaticResource notFocusable}" Header="時間"  Width="60" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Button Grid.Column="2" Grid.Row="3" Content="集計" Padding="15,0,15,0" HorizontalAlignment="Right" Margin="5" Command="{Binding ReportCommand}"/>
+                    </Grid>
                 </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
-        <TextBlock Grid.Column="2" Grid.Row="1" Margin="10,5,0,0" Foreground="Red" Text="※グリッドは編集不可です" VerticalAlignment="Center">
-            <TextBlock.Style>
-                <Style TargetType="{x:Type TextBlock}">
-                    <!--デフォのすべてのタスクの場合は編集不可-->
-                    <Setter Property="Visibility" Value="Visible"/>
-                    <Style.Triggers>
-                        <!--タスク指定の場合は編集可-->
-                        <DataTrigger Binding="{Binding ElementName=specifyTaskComb, Path=SelectedItem}" Value="{x:Static vm:SpecifyTaskMethod.SpecifyTask}">
-                            <Setter Property="Visibility" Value="Hidden"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBlock.Style>
-        </TextBlock>
-        <Button Grid.Column="2" Grid.Row="1" Content="行追加" Padding="15,0,15,0" HorizontalAlignment="Left" Margin="10,5,0,0" Command="{Binding AddRowCommand}">
-            <Button.Style>
-                <Style TargetType="{x:Type Button}">
-                    <!--デフォのすべてのタスクの場合は編集不可-->
-                    <Setter Property="IsEnabled" Value="False"/>
-                    <Setter Property="Visibility" Value="Hidden"/>
-                    <Style.Triggers>
-                        <!--タスク指定の場合は編集可-->
-                        <DataTrigger Binding="{Binding ElementName=specifyTaskComb, Path=SelectedItem}" Value="{x:Static vm:SpecifyTaskMethod.SpecifyTask}">
-                            <Setter Property="IsEnabled" Value="True"/>
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Button.Style>
-        </Button>
-        <DataGrid Grid.Column="0" Grid.Row="2" Margin="0,5,0,0"
-          Grid.ColumnSpan="3" ItemsSource="{Binding TaskReports}"
-            AutoGenerateColumns="False"
-            CanUserAddRows="False"
-            VerticalGridLinesBrush="Gray"
-            HorizontalGridLinesBrush="Gray"
-            HeadersVisibility="Column"
-            HorizontalContentAlignment="Center"
-            VerticalContentAlignment="Center">
-            <DataGrid.Style>
-                <Style TargetType="{x:Type DataGrid}">
-                    <!--デフォのすべてのタスクの場合は編集不可-->
-                    <Setter Property="CanUserDeleteRows" Value="False"/>
-                    <Setter Property="IsReadOnly" Value="True"/>
-                    <Style.Triggers>
-                        <!--タスク指定の場合は編集可-->
-                        <DataTrigger Binding="{Binding ElementName=specifyTaskComb, Path=SelectedItem}" Value="{x:Static vm:SpecifyTaskMethod.SpecifyTask}">
-                            <Setter Property="CanUserDeleteRows" Value="True"/>
-                            <Setter Property="IsReadOnly" Value="False"/>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.Style>
-            <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding TaskName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Header="タスク名"  Width="*"/>
-                <DataGridTemplateColumn IsReadOnly="True" Header="検索方法"  Width="100">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Source={StaticResource taskSearchMethods}}"
-                                HorizontalContentAlignment="Center"
-                                SelectedItem="{Binding TaskSearchMethodType, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Converter={local:EnumToStringConverter}}"/>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                                <ComboBox.Style>
-                                    <Style TargetType="{x:Type ComboBox}">
-                                        <!--デフォのすべてのタスクの場合は編集不可-->
-                                        <Setter Property="IsReadOnly" Value="False"/>
-                                        <Setter Property="IsTabStop" Value="False"/>
-                                        <Setter Property="IsHitTestVisible" Value="False"/>
-                                        <Style.Triggers>
-                                            <!--タスク指定の場合は編集可-->
-                                            <DataTrigger Binding="{Binding ElementName=specifyTaskComb, Path=SelectedItem}" Value="{x:Static vm:SpecifyTaskMethod.SpecifyTask}">
-                                                <Setter Property="IsReadOnly" Value="True"/>
-                                                <Setter Property="IsTabStop" Value="True"/>
-                                                <Setter Property="IsHitTestVisible" Value="True"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </ComboBox.Style>
-                            </ComboBox>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding WorkingMinutes, Converter={local:MinutesToHHmmConverter}}" ElementStyle="{StaticResource textCenter}" CellStyle="{StaticResource notFocusable}" Header="時間"  Width="60" IsReadOnly="True"/>
-            </DataGrid.Columns>
-        </DataGrid>
-        <Button Grid.Column="2" Grid.Row="3" Content="出力" Padding="15,0,15,0" HorizontalAlignment="Right" Margin="5" Command="{Binding ReportCommand}"/>
+            </TabControl.ContentTemplate>
+        </TabControl>
     </Grid>
 </Window>

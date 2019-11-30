@@ -18,8 +18,22 @@ namespace TaskLogger.ViewModel
         [Description("すべてのタスク")]
         AllTasks
     }
-
     public class ReportWindowViewModel : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void RaisePropertyChanged([CallerMemberName]string propertyName = null)
+            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        public ObservableCollection<ReportViewModel> Reports { get; set; }
+
+        public ReportWindowViewModel(TaskLogApplicationService service)
+        {
+            Reports = new ObservableCollection<ReportViewModel>();
+            Reports.Add(new ReportViewModel(service));
+        }
+    }
+
+    public class ReportViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private void RaisePropertyChanged([CallerMemberName]string propertyName = null)
@@ -30,6 +44,18 @@ namespace TaskLogger.ViewModel
         public DelegateCommand ReportCommand { get; set; }
         public DelegateCommand AddRowCommand { get; set; }
 
+        private string _Title;
+        public string Title
+        {
+            get { return _Title; }
+            set
+            {
+                if (value == _Title)
+                    return;
+                _Title = value;
+                RaisePropertyChanged(nameof(Title));
+            }
+        }
         private PeriodViewModel _Period;
         public PeriodViewModel Period
         {
@@ -81,10 +107,11 @@ namespace TaskLogger.ViewModel
         }
 
         public ObservableCollection<TaskReportItemViewModel> TaskReports { get; set; }
-        public ReportWindowViewModel(TaskLogApplicationService service)
+        public ReportViewModel(TaskLogApplicationService service)
         {
             this.service = service;
             this.TaskReports = new ObservableCollection<TaskReportItemViewModel>();
+            Title = "新規";
             PeriodType = PeriodType.DatePeriod;
             SpecifyTaskMethod = SpecifyTaskMethod.AllTasks;
 
