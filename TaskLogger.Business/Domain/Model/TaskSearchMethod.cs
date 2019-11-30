@@ -18,17 +18,17 @@ namespace TaskLogger.Business.Domain.Model
     public class TaskSearchMethod
     {
         public string TaskKeyword { get; set; }
-        public TaskSearchMethodType searchMethod { get; set; }
+        public TaskSearchMethodType SearchMethod { get; set; }
 
         public bool IsMatched(TaskLog log)
         {
-            if (searchMethod == TaskSearchMethodType.PerfectMatch)
+            if (SearchMethod == TaskSearchMethodType.PerfectMatch)
                 return log.TaskName == TaskKeyword;
-            if (searchMethod == TaskSearchMethodType.FirstMatch)
+            if (SearchMethod == TaskSearchMethodType.FirstMatch)
                 return log.TaskName.StartsWith(TaskKeyword);
-            if (searchMethod == TaskSearchMethodType.PartialMatch)
+            if (SearchMethod == TaskSearchMethodType.PartialMatch)
                 return log.TaskName.Contains(TaskKeyword);
-            if (searchMethod == TaskSearchMethodType.RegexpMatch)
+            if (SearchMethod == TaskSearchMethodType.RegexpMatch)
                 return System.Text.RegularExpressions.Regex.IsMatch(log.TaskName, TaskKeyword);
 
             return false;

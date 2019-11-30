@@ -1,14 +1,17 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using TaskLogger.Business.Domain.Model;
 
 namespace TaskLogger.ViewModel
 {
-    public class PeriodViewModel : INotifyPropertyChanged
+    public abstract class PeriodViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         protected void RaisePropertyChanged([CallerMemberName]string propertyName = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+        public abstract Period Create();
     }
 
     public enum PeriodType
@@ -20,7 +23,14 @@ namespace TaskLogger.ViewModel
         [Description("日付")]
         DatePeriod
     }
-    public class WholePeriodViewModel : PeriodViewModel { }
+    public class WholePeriodViewModel : PeriodViewModel
+    {
+        public override Period Create()
+        {
+            return new WholePeriod();
+        }
+    }
+
     public class PartialPeriodViewModel : PeriodViewModel
     {
         public PartialPeriodViewModel()
@@ -52,6 +62,10 @@ namespace TaskLogger.ViewModel
                 RaisePropertyChanged(nameof(End));
             }
         }
+        public override Period Create()
+        {
+            return new PartialPeriod() { StartDay = Start.Date, EndDay = End.Date };
+        }
 
     }
     public class DatePeriodViewModel : PeriodViewModel
@@ -71,6 +85,10 @@ namespace TaskLogger.ViewModel
                 _Date = value;
                 RaisePropertyChanged(nameof(Date));
             }
+        }
+        public override Period Create()
+        {
+            return new DatePeriod() { Date = Date };
         }
     }
 

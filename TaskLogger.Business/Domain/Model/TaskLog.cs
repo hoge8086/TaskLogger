@@ -127,30 +127,35 @@ namespace TaskLogger.Business.Domain.Model
                 return Logs.Sum(x => x.WorkingMinutes ?? 0);
             }
         }
-        private TaskLogs FindAll(Period period)
-        {
-            return new TaskLogs { Logs = Logs.Where(x => period.IsIn(x.Start) || period.IsIn(x.End)).ToList() };
-        }
         private TaskLogs FindAll(TaskSearchMethod searchMethod)
         {
             return new TaskLogs { Logs = Logs.Where(x => searchMethod.IsMatched(x)).ToList() };
         }
-        public TaskReport CreateReport(ReportTarget target)
+        public TaskReport CreateReport()
         {
-            //Periodが全期間以外の場合は、その他をレポートに追加する????DownTimeはその他に含めるか??
-            var logsInPeriod = FindAll(target.Period);
-            return new TaskReport() {
-                Items = target.TargetTasks
-                        .Select(x => {
-                            var logs = logsInPeriod.FindAll(x);
-                            return new TaskReportItem() {
-                                Logs = logs,
-                                TaskKeyword = x.TaskKeyword,
-                                TotalMinutes = logs.TotalMinutes //メモ:日付をまたぐログはないものとして処理する(計算がやっかいなので)
-                            };
-                        })
-                        .ToList()
-                };
+            var targets = Logs
+                            .Select(x => x.TaskName)
+                            .Distinct()
+                            .Select(x => new TaskSearchMethod() { TaskKeyword = x, SearchMethod = TaskSearchMethodType.PerfectMatch })
+                            .ToList();
+            return CreateReport(targets);
+        }
+        public TaskReport CreateReport(List<TaskSearchMethod> targets)
+        {
+            return new TaskReport()
+            {
+                Items = targets.Select(x =>
+                {
+                    var logs = FindAll(x);
+                    return new TaskReportItem()
+                    {
+                        Logs = logs,
+                        //TaskKeyword = x.TaskKeyword,
+                        TaskSearchMethod = x,
+                        TotalMinutes = logs.TotalMinutes
+                    };
+                }).ToList()
+            };
         }
 
         public List<string> TaskNamesByRecentlyOrder()

@@ -17,11 +17,6 @@
         <Style x:Key="notFocusable" TargetType="{x:Type DataGridCell}"> 
             <Setter Property="Focusable" Value="False"/> 
         </Style>
-        <x:Array x:Key="dateType" Type="{x:Type sys:String}">
-            <sys:String>日付</sys:String>
-            <sys:String>期間</sys:String>
-            <sys:String>全期間</sys:String>
-        </x:Array>
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
@@ -119,7 +114,7 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
         <DataGrid Grid.Column="0" Grid.Row="2" Margin="0,5,0,0"
-          Grid.ColumnSpan="3" ItemsSource="{Binding TaskLogs}"
+          Grid.ColumnSpan="3" ItemsSource="{Binding TaskReports}"
             AutoGenerateColumns="False"
             CanUserAddRows="False"
             VerticalGridLinesBrush="Gray"
@@ -129,20 +124,25 @@
             HorizontalContentAlignment="Center"
             VerticalContentAlignment="Center">
             <DataGrid.Columns>
-                <DataGridTemplateColumn IsReadOnly="True" Header="タスク名"  Width="*">
+                <DataGridTextColumn Binding="{Binding TaskName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" Header="タスク名"  Width="*"/>
+                <DataGridTemplateColumn IsReadOnly="True" Header="検索方法"  Width="100">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox IsEditable="True" Text="{Binding TaskName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                      HorizontalAlignment="Stretch"
-                                      BorderThickness="0"
-                                      BorderBrush="Transparent"/>
+                            <ComboBox Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Source={StaticResource taskSearchMethods}}"
+                                HorizontalContentAlignment="Center"
+                                SelectedItem="{Binding TaskSearchMethodType, Mode=TwoWay, UpdateSourceTrigger=LostFocus}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Converter={local:EnumToStringConverter}}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding DownTimeMinutes, Mode=TwoWay}" ElementStyle="{StaticResource textCenter}" Header="検索方法"  Width="60"/>
-                <DataGridTextColumn Binding="{Binding WorkingMinutes}" ElementStyle="{StaticResource textCenter}" CellStyle="{StaticResource notFocusable}" Header="時間"  Width="60" IsReadOnly="True"/>
+                <DataGridTextColumn Binding="{Binding WorkingMinutes, Converter={local:MinutesToHHmmConverter}}" ElementStyle="{StaticResource textCenter}" CellStyle="{StaticResource notFocusable}" Header="時間"  Width="60" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Button Grid.Column="2" Grid.Row="3" Content="出力" HorizontalAlignment="Right" Padding="15,0,15,0" Margin="5"/>
+        <Button Grid.Column="2" Grid.Row="3" Content="出力" HorizontalAlignment="Right" Padding="15,0,15,0" Margin="5" Command="{Binding ReportCommand}"/>
     </Grid>
 </Window>

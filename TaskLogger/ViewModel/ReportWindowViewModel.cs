@@ -87,26 +87,35 @@ namespace TaskLogger.ViewModel
             ReportCommand = new DelegateCommand(
                     (_) =>
                     {
-                        var log = service.CreateReport(new ReportTarget());
-                        Update();
+                        TaskReport report = null;
+                        if(SpecifyTaskMethod == SpecifyTaskMethod.AllTasks)
+                        {
+                            report = service.CreateReportForAllTask(Period.Create());
+                        }
+                        else if(SpecifyTaskMethod == SpecifyTaskMethod.SpecifyTask)
+                        {
+                            report = service.CreateReport(
+                                            Period.Create(),
+                                            TaskReports
+                                                .Select(x => {
+                                                    return new TaskSearchMethod() { TaskKeyword = x.TaskName, SearchMethod = x.TaskSearchMethodType };
+                                                }).ToList()
+                                            );
+                        }
+                        Update(report);
                     });
             PeriodType = PeriodType.DatePeriod;
             SpecifyTaskMethod = SpecifyTaskMethod.AllTasks;
-            Update();
+            //Update();
         }
 
-        public void Update()
+        public void Update(TaskReport report)
         {
-            //TaskLogs = new ObservableCollection<TaskLogViewModel>();
-            //TaskLogs.Clear();
-            //var logs = service.TaskLogs(new DatePeriod() { Date = _Date });
-            //foreach (var log in logs)
-            //{
-            //    TaskLogs.Add(new TaskLogViewModel(log.Id, _Date, service));
-            //}
-            //RecentlyTaskNames.Clear();
-            //foreach(var tn in service.RecentlyTaskNames())
-            //    RecentlyTaskNames.Add(tn);
+            TaskReports.Clear();
+            foreach(var item in report.Items)
+            {
+                TaskReports.Add(new TaskReportItemViewModel(item.TaskSearchMethod.TaskKeyword, item.TaskSearchMethod.SearchMethod, item.TotalMinutes));
+            }
         }
     }
 
@@ -118,16 +127,16 @@ namespace TaskLogger.ViewModel
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         private string _TaskName;
-        private TaskSearchMethod _TaskSearchMethod;
+        private TaskSearchMethodType _TaskSearchMethodType;
         private int? _WorkingMinutes;
 
         public TaskReportItemViewModel(
             string TaskName,
-            TaskSearchMethod TaskSearchMethod,
+            TaskSearchMethodType TaskSearchMethod,
             int? WorkingMinutes)
         {
             this.TaskName = TaskName;
-            this.TaskSearchMethod = TaskSearchMethod;
+            this.TaskSearchMethodType = TaskSearchMethod;
             this.WorkingMinutes = WorkingMinutes;
         }
 
@@ -143,15 +152,15 @@ namespace TaskLogger.ViewModel
             }
         }
 
-        public TaskSearchMethod TaskSearchMethod
+        public TaskSearchMethodType TaskSearchMethodType
         {
-            get { return _TaskSearchMethod; }
+            get { return _TaskSearchMethodType; }
             set
             {
-                if (value == _TaskSearchMethod)
+                if (value == _TaskSearchMethodType)
                     return;
-                _TaskSearchMethod = value;
-                RaisePropertyChanged(nameof(TaskSearchMethod));
+                _TaskSearchMethodType = value;
+                RaisePropertyChanged(nameof(TaskSearchMethodType));
             }
         }
         public int? WorkingMinutes

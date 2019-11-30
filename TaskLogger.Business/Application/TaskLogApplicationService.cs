@@ -108,10 +108,16 @@ namespace TaskLogger.Business.Application
             return taskLogRepository.FindByID(id);
         }
 
-        public TaskReport CreateReport(ReportTarget reportTarget)
+        public TaskReport CreateReportForAllTask(Period period)
         {
-            var logs = taskLogRepository.FindAll();
-            return logs.CreateReport(reportTarget);
+            var logs = taskLogRepository.FindWithinPeriod(period);
+            return logs.CreateReport();
+        }
+
+        public TaskReport CreateReport(Period period, List<TaskSearchMethod> targets)
+        {
+            var logs = taskLogRepository.FindWithinPeriod(period);
+            return logs.CreateReport(targets);
         }
 
         public List<string> RecentlyTaskNames()
