@@ -84,6 +84,9 @@ namespace TaskLogger.ViewModel
         {
             this.service = service;
             this.TaskReports = new ObservableCollection<TaskReportItemViewModel>();
+            PeriodType = PeriodType.DatePeriod;
+            SpecifyTaskMethod = SpecifyTaskMethod.AllTasks;
+
             ReportCommand = new DelegateCommand(
                     (_) =>
                     {
@@ -94,19 +97,19 @@ namespace TaskLogger.ViewModel
                         }
                         else if(SpecifyTaskMethod == SpecifyTaskMethod.SpecifyTask)
                         {
-                            report = service.CreateReport(
-                                            Period.Create(),
-                                            TaskReports
-                                                .Select(x => {
-                                                    return new TaskSearchMethod() { TaskKeyword = x.TaskName, SearchMethod = x.TaskSearchMethodType };
-                                                }).ToList()
-                                            );
+                            report = service.CreateReport(Period.Create(), CreateTaskSearhMethods());
                         }
                         Update(report);
                     });
-            PeriodType = PeriodType.DatePeriod;
-            SpecifyTaskMethod = SpecifyTaskMethod.AllTasks;
             //Update();
+        }
+        private List<TaskSearchMethod> CreateTaskSearhMethods()
+        {
+            return TaskReports
+                .Select(x => {
+                        return new TaskSearchMethod() { TaskKeyword = x.TaskName, SearchMethod = x.TaskSearchMethodType };
+                    })
+                .ToList();
         }
 
         public void Update(TaskReport report)
