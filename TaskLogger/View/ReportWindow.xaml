@@ -52,8 +52,9 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Column="0" Grid.Row="0" Text="レポート期間：" Margin="5,5,0,0"/>
+        <TextBlock Grid.Column="0" Grid.Row="0" Text="レポート期間：" Margin="5,5,0,0" VerticalAlignment="Center"/>
         <ComboBox Grid.Column="1" Grid.Row="0" Margin="0,5,0,0"
+            VerticalAlignment="Center"
             HorizontalAlignment="Left"
             x:Name="peridoComb" Width="100" ItemsSource="{Binding Source={StaticResource periodTypes}}"
             HorizontalContentAlignment="Center"
@@ -86,7 +87,18 @@
                 </DataTemplate>
             </ContentControl.Resources>
         </ContentControl>
-        <TextBlock Grid.Column="2" Grid.Row="1" Margin="10,0,0,0" Foreground="Red" Text="※グリッドは編集不可です" VerticalAlignment="Center">
+        <TextBlock Grid.Column="0" Grid.Row="1" Text="出力タスク：" Margin="5,5,0,0" VerticalAlignment="Center"/>
+        <ComboBox x:Name="specifyTaskComb" Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Source={StaticResource specifyTaskMethods}}"
+            HorizontalContentAlignment="Center" Margin="0,5,0,0"
+            SelectedItem="{Binding SpecifyTaskMethod}">
+            <!--https://qiita.com/inabe49/items/ff16344af627d039da73-->
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={local:EnumToStringConverter}}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+        <TextBlock Grid.Column="2" Grid.Row="1" Margin="10,5,0,0" Foreground="Red" Text="※グリッドは編集不可です" VerticalAlignment="Center">
             <TextBlock.Style>
                 <Style TargetType="{x:Type TextBlock}">
                     <!--デフォのすべてのタスクの場合は編集不可-->
@@ -100,17 +112,22 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>
-        <TextBlock Grid.Column="0" Grid.Row="1" Text="出力タスク：" Margin="5,5,0,0"/>
-        <ComboBox x:Name="specifyTaskComb" Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Source={StaticResource specifyTaskMethods}}"
-            HorizontalContentAlignment="Center" Margin="0,5,0,0"
-            SelectedItem="{Binding SpecifyTaskMethod}">
-            <!--https://qiita.com/inabe49/items/ff16344af627d039da73-->
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Converter={local:EnumToStringConverter}}"/>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
+        <Button Grid.Column="2" Grid.Row="1" Content="行追加" Padding="15,0,15,0" HorizontalAlignment="Left" Margin="10,5,0,0" Command="{Binding AddRowCommand}">
+            <Button.Style>
+                <Style TargetType="{x:Type Button}">
+                    <!--デフォのすべてのタスクの場合は編集不可-->
+                    <Setter Property="IsEnabled" Value="False"/>
+                    <Setter Property="Visibility" Value="Hidden"/>
+                    <Style.Triggers>
+                        <!--タスク指定の場合は編集可-->
+                        <DataTrigger Binding="{Binding ElementName=specifyTaskComb, Path=SelectedItem}" Value="{x:Static vm:SpecifyTaskMethod.SpecifyTask}">
+                            <Setter Property="IsEnabled" Value="True"/>
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
         <DataGrid Grid.Column="0" Grid.Row="2" Margin="0,5,0,0"
           Grid.ColumnSpan="3" ItemsSource="{Binding TaskReports}"
             AutoGenerateColumns="False"
@@ -170,9 +187,6 @@
                 <DataGridTextColumn Binding="{Binding WorkingMinutes, Converter={local:MinutesToHHmmConverter}}" ElementStyle="{StaticResource textCenter}" CellStyle="{StaticResource notFocusable}" Header="時間"  Width="60" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
-        <StackPanel Grid.Column="2" Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" >
-            <Button Content="行追加"  Padding="15,0,15,0" Margin="5" Command="{Binding AddRowCommand}"/>
-            <Button Content="出力" Padding="15,0,15,0" Margin="5" Command="{Binding ReportCommand}"/>
-        </StackPanel>
+        <Button Grid.Column="2" Grid.Row="3" Content="出力" Padding="15,0,15,0" HorizontalAlignment="Right" Margin="5" Command="{Binding ReportCommand}"/>
     </Grid>
 </Window>
