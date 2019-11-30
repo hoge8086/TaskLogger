@@ -71,13 +71,18 @@
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:PartialPeriodViewModel}">
                     <StackPanel Orientation="Horizontal">
-                        <DatePicker Text="{Binding Start, Mode=TwoWay}" Width="100" HorizontalAlignment="Left" BorderBrush="Transparent"/>
+                        <TextBlock Text="{Binding Start, StringFormat='yyyy年MM月dd日(ddd)', ConverterCulture=ja-JP}" Margin="5,0,0,0" VerticalAlignment="Center" />
+                        <DatePicker Text="{Binding Start, Mode=TwoWay}" Width="30" HorizontalAlignment="Left" VerticalAlignment="Center" Focusable="False" BorderBrush="Transparent" BorderThickness="0" />
                         <TextBlock Text="～" VerticalAlignment="Center"/>
-                        <DatePicker Text="{Binding End, Mode=TwoWay}" Width="100" HorizontalAlignment="Left" BorderBrush="Transparent"/>
+                        <TextBlock Text="{Binding End, StringFormat='yyyy年MM月dd日(ddd)', ConverterCulture=ja-JP}" Margin="5,0,0,0" VerticalAlignment="Center" />
+                        <DatePicker Text="{Binding End, Mode=TwoWay}" Width="30" HorizontalAlignment="Left" VerticalAlignment="Center" Focusable="False" BorderBrush="Transparent" BorderThickness="0" />
                     </StackPanel>
                 </DataTemplate>
                 <DataTemplate DataType="{x:Type vm:DatePeriodViewModel}">
-                    <DatePicker Text="{Binding Date, Mode=TwoWay}" Width="100" HorizontalAlignment="Left" BorderBrush="Transparent"/>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Date, StringFormat='yyyy年MM月dd日(ddd)', ConverterCulture=ja-JP}" Margin="5,0,0,0" VerticalAlignment="Center" />
+                        <DatePicker Text="{Binding Date, Mode=TwoWay}" Width="30" HorizontalAlignment="Left" VerticalAlignment="Center" Focusable="False" BorderBrush="Transparent" BorderThickness="0" />
+                    </StackPanel>
                 </DataTemplate>
             </ContentControl.Resources>
         </ContentControl>
