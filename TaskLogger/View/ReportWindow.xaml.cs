@@ -26,5 +26,15 @@ namespace TaskLogger.View
             InitializeComponent();
             this.DataContext = new ReportWindowViewModel(((App)App.Current).TaskLogApplicationService);
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            //TODO:これに直す
+            //https://codeday.me/jp/qa/20190208/209713.html
+            var vm = this.DataContext as ReportWindowViewModel;
+            if (vm != null)
+                vm.CloseCommand.Execute(null);
+
+        }
     }
 }

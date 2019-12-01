@@ -14,7 +14,8 @@ namespace ConsoleTaskLogger
         {
             var context = new TaskLogContext();
             var rep = new TaskLogRepository(context);
-            var service = new TaskLogApplicationService(rep);
+            var rrep = new ReportTargetRepository();
+            var service = new TaskLogApplicationService(rep, rrep);
             for(; ; )
             {
                 Console.Write(">");

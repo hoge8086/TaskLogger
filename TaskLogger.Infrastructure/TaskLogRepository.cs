@@ -15,6 +15,7 @@ using TaskLogger.Business.Domain.Model;
 //(3) 初回実行などSQLiteのデータベースファイルが存在しない場合、テーブルが自動作成されないので、手動で作成する必要がある
 namespace TaskLogger.Infrastructure
 {
+
     public class TaskLogContext : DbContext
     {
         public TaskLogContext() : base("taskLogs") { }

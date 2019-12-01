@@ -25,11 +25,22 @@ namespace TaskLogger.ViewModel
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         public ObservableCollection<ReportViewModel> Reports { get; set; }
+        public DelegateCommand CloseCommand { get; set; }
 
         public ReportWindowViewModel(TaskLogApplicationService service)
         {
             Reports = new ObservableCollection<ReportViewModel>();
-            Reports.Add(new ReportViewModel(service));
+
+            var targets = service.AllReportTargets();
+            foreach (var t in targets)
+                Reports.Add(new ReportViewModel(service, t));
+
+            CloseCommand = new DelegateCommand(
+                    (_) =>
+                    {
+                        var t = Reports.Select(x => x.CreateModel()).ToList();
+                        service.SaveReportTarget(t);
+                    });
         }
     }
 
@@ -107,26 +118,76 @@ namespace TaskLogger.ViewModel
         }
 
         public ObservableCollection<TaskReportItemViewModel> TaskReports { get; set; }
+        public ReportViewModel(TaskLogApplicationService service, ReportTarget reportTarget)
+        {
+            var periodType = PeriodType.DatePeriod;
+            PeriodViewModel periodViewModel = null;
+            if (reportTarget.Period is DatePeriod)
+            {
+                periodType = PeriodType.DatePeriod;
+                periodViewModel = new DatePeriodViewModel() { Date = ((DatePeriod)reportTarget.Period).Date };
+            }
+            if (reportTarget.Period is WholePeriod)
+            {
+                periodType = PeriodType.WholePeriod;
+                periodViewModel = new WholePeriodViewModel();
+            }
+            if (reportTarget.Period is PartialPeriod)
+            {
+                periodType = PeriodType.PartialPeriod;
+                periodViewModel = new PartialPeriodViewModel()
+                {
+                    Start = ((PartialPeriod)reportTarget.Period).StartDay,
+                    End = ((PartialPeriod)reportTarget.Period).EndDay
+                };
+            }
+
+            var targets = new ObservableCollection<TaskReportItemViewModel>();
+            var specifyTaskMethod = SpecifyTaskMethod;
+            if (reportTarget is ReportTargetAllTask)
+            {
+                specifyTaskMethod = SpecifyTaskMethod.AllTasks;
+            }
+            if (reportTarget is ReportTargetSpecifyTask)
+            {
+                specifyTaskMethod = SpecifyTaskMethod.SpecifyTask;
+                foreach(var x in ((ReportTargetSpecifyTask)reportTarget).TargetTasks)
+                    targets.Add(new TaskReportItemViewModel(x.TaskKeyword, x.SearchMethod, 0));
+            }
+            Init(service, reportTarget.Title, periodType,  periodViewModel, specifyTaskMethod, targets);
+        }
+
+        public ReportTarget CreateModel()
+        {
+            if(SpecifyTaskMethod == SpecifyTaskMethod.AllTasks)
+            {
+                return new ReportTargetAllTask(Title, Period.Create());
+            }
+            else if(SpecifyTaskMethod == SpecifyTaskMethod.SpecifyTask)
+            {
+                return new ReportTargetSpecifyTask(Title, Period.Create(), CreateTaskSearhMethods());
+            }
+            return null;
+        }
+
         public ReportViewModel(TaskLogApplicationService service)
         {
+            Init(service, "新規", PeriodType.DatePeriod, new DatePeriodViewModel(), SpecifyTaskMethod.AllTasks,  new ObservableCollection<TaskReportItemViewModel>());
+        }
+
+        public void Init(TaskLogApplicationService service, string title, PeriodType periodType, PeriodViewModel periodViewModel, SpecifyTaskMethod specifyTaskMethod, ObservableCollection<TaskReportItemViewModel> targets)
+        {
             this.service = service;
-            this.TaskReports = new ObservableCollection<TaskReportItemViewModel>();
-            Title = "新規";
-            PeriodType = PeriodType.DatePeriod;
-            SpecifyTaskMethod = SpecifyTaskMethod.AllTasks;
+            this.TaskReports = targets;
+            Title = title;
+            PeriodType = periodType;
+            Period = periodViewModel;
+            SpecifyTaskMethod = specifyTaskMethod;
 
             ReportCommand = new DelegateCommand(
                     (_) =>
                     {
-                        TaskReport report = null;
-                        if(SpecifyTaskMethod == SpecifyTaskMethod.AllTasks)
-                        {
-                            report = service.CreateReportForAllTask(Period.Create());
-                        }
-                        else if(SpecifyTaskMethod == SpecifyTaskMethod.SpecifyTask)
-                        {
-                            report = service.CreateReport(Period.Create(), CreateTaskSearhMethods());
-                        }
+                        var report = service.CreateReport(CreateModel());
                         Update(report);
                     });
             AddRowCommand = new DelegateCommand(

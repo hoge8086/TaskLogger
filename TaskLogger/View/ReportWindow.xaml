@@ -8,6 +8,7 @@
         xmlns:m="clr-namespace:TaskLogger.Business.Domain.Model;assembly=TaskLogger.Business"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
+        Closing="Window_Closing"
         Title="ReportWindow" Width="500" SizeToContent="Height">
     <Window.Resources>
         <Style x:Key="textCenter" TargetType="TextBlock">

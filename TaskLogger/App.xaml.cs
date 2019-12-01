@@ -20,13 +20,15 @@ namespace TaskLogger
     {
         public TaskLogContext TaskLogContext { get; set; }
         public TaskLogRepository TaskLogRepository { get; set; }
+        public ReportTargetRepository ReportTargetRepository { get; set; }
         public TaskLogApplicationService TaskLogApplicationService{ get; set; }
 
         void App_Startup(object sender, StartupEventArgs e)
         {
             TaskLogContext = new TaskLogContext();
             TaskLogRepository = new TaskLogRepository(TaskLogContext);
-            TaskLogApplicationService = new TaskLogApplicationService(TaskLogRepository);
+            ReportTargetRepository = new ReportTargetRepository();
+            TaskLogApplicationService = new TaskLogApplicationService(TaskLogRepository, ReportTargetRepository);
         }
     }
 }

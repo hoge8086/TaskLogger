@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskLogger.Infrastructure",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTaskLogger", "ConsoleTaskLogger\ConsoleTaskLogger.csproj", "{04CBC9C4-AEB7-4273-A6BC-5F122F69036E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskLogger.InfrastructureTests", "TaskLogger.InfrastructureTests\TaskLogger.InfrastructureTests.csproj", "{3577E95C-5CA1-46E7-8368-A134DF76128A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{04CBC9C4-AEB7-4273-A6BC-5F122F69036E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04CBC9C4-AEB7-4273-A6BC-5F122F69036E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04CBC9C4-AEB7-4273-A6BC-5F122F69036E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3577E95C-5CA1-46E7-8368-A134DF76128A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3577E95C-5CA1-46E7-8368-A134DF76128A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3577E95C-5CA1-46E7-8368-A134DF76128A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3577E95C-5CA1-46E7-8368-A134DF76128A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

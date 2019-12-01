@@ -1,17 +1,24 @@
 ﻿using System;
+using System.Xml.Serialization;
 
 namespace TaskLogger.Business.Domain.Model
 {
-    public interface Period {
-        bool IsIn(DateTime? dateTime);
+    [XmlInclude(typeof(WholePeriod))]
+    [XmlInclude(typeof(PartialPeriod))]
+    [XmlInclude(typeof(DatePeriod))]
+    public abstract class Period {
+        public abstract bool IsIn(DateTime? dateTime);
     }
+
     public class WholePeriod : Period {
-        public bool IsIn(DateTime? dateTime) { return true; }
+        public override bool IsIn(DateTime? dateTime) { return true; }
+        public WholePeriod() { }
     }
     
     public class PartialPeriod : Period {
         private DateTime startDay;
         private DateTime endDay;
+        public PartialPeriod() { }
         public DateTime StartDay
         {
             set
@@ -28,7 +35,7 @@ namespace TaskLogger.Business.Domain.Model
             }
             get { return endDay; }
         }
-        public bool IsIn(DateTime? dateTime)
+        public override bool IsIn(DateTime? dateTime)
         {
             if (dateTime == null)
                 return false;
@@ -39,7 +46,9 @@ namespace TaskLogger.Business.Domain.Model
 
     public class DatePeriod : Period {
         public DateTime Date { get; set; }
-        public bool IsIn(DateTime? dateTime)
+        public DatePeriod(DateTime date) { this.Date = date; }
+        public DatePeriod() { }
+        public override bool IsIn(DateTime? dateTime)
         {
             if (dateTime == null)
                 return false;

@@ -10,12 +10,14 @@ namespace TaskLogger.Business.Application
     public class TaskLogApplicationService
     {
         private ITaskLogRepository taskLogRepository;
+        private IReportTargetRepository reportTargetRepository;
         private TaskLogFactory taskLogFactory; 
 
-        public TaskLogApplicationService(ITaskLogRepository taskLogRepository)
+        public TaskLogApplicationService(ITaskLogRepository taskLogRepository, IReportTargetRepository reportTargetRepository)
         {
             this.taskLogRepository = taskLogRepository;
             this.taskLogFactory = new TaskLogFactory(taskLogRepository);
+            this.reportTargetRepository = reportTargetRepository;
         }
         public TaskLog CreateTaskLog(DateTime logDate)
         {
@@ -35,6 +37,11 @@ namespace TaskLogger.Business.Application
 
             log.ChangeTaskName(taskName);
             taskLogRepository.Save();
+        }
+
+        public void SaveReportTarget(List<ReportTarget> targets)
+        {
+            reportTargetRepository.Save(targets);
         }
 
         public void ChangeTaskLogStart(int logId, DateTime start)
@@ -98,6 +105,11 @@ namespace TaskLogger.Business.Application
             return taskLogRepository.FindAll().Logs.AsReadOnly();
         }
 
+        public IList<ReportTarget> AllReportTargets()
+        {
+            return reportTargetRepository.FindAll();
+        }
+
         public IList<TaskLog> TaskLogs(Period period)
         {
             return taskLogRepository.FindWithinPeriod(period).Logs.AsReadOnly();
@@ -108,16 +120,22 @@ namespace TaskLogger.Business.Application
             return taskLogRepository.FindByID(id);
         }
 
-        public TaskReport CreateReportForAllTask(Period period)
-        {
-            var logs = taskLogRepository.FindWithinPeriod(period);
-            return logs.CreateReport();
-        }
+        //public TaskReport CreateReportForAllTask(Period period)
+        //{
+        //    var logs = taskLogRepository.FindWithinPeriod(period);
+        //    return logs.CreateReport();
+        //}
 
-        public TaskReport CreateReport(Period period, List<TaskSearchMethod> targets)
+        //public TaskReport CreateReport(Period period, List<TaskSearchMethod> targets)
+        //{
+        //    var logs = taskLogRepository.FindWithinPeriod(period);
+        //    return logs.CreateReport(targets);
+        //}
+
+        public TaskReport CreateReport(ReportTarget reportTarget)
         {
-            var logs = taskLogRepository.FindWithinPeriod(period);
-            return logs.CreateReport(targets);
+            var logs = taskLogRepository.FindWithinPeriod(reportTarget.Period);
+            return reportTarget.CreateReport(logs);
         }
 
         public List<string> RecentlyTaskNames()

@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application\TaskLogApplicationService.cs" />
+    <Compile Include="Domain\Model\IReportTargetRepository.cs" />
     <Compile Include="Domain\Model\ITaskLogRepository.cs" />
     <Compile Include="Domain\Model\Period.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
