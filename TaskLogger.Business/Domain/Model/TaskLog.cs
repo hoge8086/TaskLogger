@@ -131,15 +131,15 @@ namespace TaskLogger.Business.Domain.Model
         {
             return new TaskLogs { Logs = Logs.Where(x => searchMethod.IsMatched(x)).ToList() };
         }
-        public TaskReport CreateReport()
-        {
-            var targets = Logs
-                            .Select(x => x.TaskName)
-                            .Distinct()
-                            .Select(x => new TaskSearchMethod() { TaskKeyword = x, SearchMethod = TaskSearchMethodType.PerfectMatch })
-                            .ToList();
-            return CreateReport(targets);
-        }
+        //public TaskReport CreateReport()
+        //{
+        //    var targets = Logs
+        //                    .Select(x => x.TaskName)
+        //                    .Distinct()
+        //                    .Select(x => new TaskSearchMethod() { TaskKeyword = x, SearchMethod = TaskSearchMethodType.PerfectMatch })
+        //                    .ToList();
+        //    return CreateReport(targets);
+        //}
         public TaskReport CreateReport(List<TaskSearchMethod> targets)
         {
             return new TaskReport()

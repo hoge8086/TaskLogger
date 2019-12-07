@@ -84,7 +84,7 @@ namespace TaskLogger.Infrastructure
 
             Data = new XmlData();
             Data.ReportTargets = new List<ReportTarget>();
-            Data.ReportTargets.Add(new ReportTargetAllTask("新規", new DatePeriod(DateTime.Today)));
+            Data.ReportTargets.Add(new ReportTarget("新規", new WholePeriod(), new AllTaskSpecify()));
             return Data;
         }
 

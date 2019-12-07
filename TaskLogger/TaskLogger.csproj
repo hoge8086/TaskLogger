@@ -55,7 +55,8 @@
     </ApplicationDefinition>
     <Compile Include="ViewModel\PeriodViewModel.cs" />
     <Compile Include="ViewModel\ReportWindowViewModel.cs" />
-    <Compile Include="View\EnumConverter.cs" />
+    <Compile Include="ViewModel\TaskSpecifyViewModel.cs" />
+    <Compile Include="View\EnumToStringConverter.cs" />
     <Compile Include="View\MinutesToHHMMConverter.cs" />
     <Compile Include="View\ReportCtrl.xaml.cs">
       <DependentUpon>ReportCtrl.xaml</DependentUpon>
@@ -63,6 +64,8 @@
     <Compile Include="View\ReportWindow.xaml.cs">
       <DependentUpon>ReportWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\ToClassDiscriptionConverter.cs" />
+    <Compile Include="View\ToClassTypeConverter.cs" />
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -17,69 +17,73 @@ namespace TaskLogger.Business.Domain.Model
         public int TotalMinutes { get; set; }
     }
 
-    [XmlInclude(typeof(ReportTargetAllTask))]
-    [XmlInclude(typeof(ReportTargetSpecifyTask))]
-    public abstract class ReportTarget
+    public class ReportTarget
     {
+        public ReportTarget()
+        {
+            this.Title = "新規";
+            this.Period = new WholePeriod();
+            this.TaskSpecify = new AllTaskSpecify();
+        }
+
+        public ReportTarget(string title, Period period, TaskSpecify taskSpecify)
+        {
+            this.Title = title;
+            this.Period = period;
+            this.TaskSpecify = taskSpecify;
+        }
+
         public string Title { get; set; }
         public Period Period { get; set; }
-        public abstract TaskReport CreateReport(TaskLogs logs);
+        public TaskSpecify TaskSpecify { get; set; }
     }
 
-    public class ReportTargetAllTask: ReportTarget
+    [XmlInclude(typeof(AllTaskSpecify))]
+    [XmlInclude(typeof(IndividualTaskSpecify))]
+    public abstract class TaskSpecify
+    {
+        public abstract List<TaskSearchMethod> CreateTaskSearchMethods(TaskLogs logs);
+    }
+
+    public class AllTaskSpecify: TaskSpecify
     {
         public TaskSearchMethod TaskSearchMethod { get; set; }
 
-        public ReportTargetAllTask() { }
-        public ReportTargetAllTask(string title, Period period)
+        public AllTaskSpecify()
         {
-            this.Title = title;
-            this.Period = period;
             this.TaskSearchMethod = null;
         }
 
-        public ReportTargetAllTask(string title, Period period, TaskSearchMethod taskSearchMethod)
+        public AllTaskSpecify(TaskSearchMethod taskSearchMethod)
         {
-            this.Title = title;
-            this.Period = period;
             this.TaskSearchMethod = taskSearchMethod;
         }
 
-        private ReportTargetSpecifyTask CreateSpecify(TaskLogs logs)
+        public override List<TaskSearchMethod> CreateTaskSearchMethods(TaskLogs logs)
         {
-            var target = logs.Logs
+            return logs.Logs
                             .Where(x => (TaskSearchMethod == null ? true : TaskSearchMethod.IsMatched(x)))
                             .Select(x =>  x.TaskName)
                             .Distinct()
                             .Select(x => new TaskSearchMethod() { TaskKeyword = x, SearchMethod = TaskSearchMethodType.PerfectMatch })
                             .ToList();
-            return new ReportTargetSpecifyTask(Title, Period, target);
-        }
-
-        public override TaskReport CreateReport(TaskLogs logs)
-        {
-            return CreateSpecify(logs).CreateReport(logs);
         }
     }
 
-    public class ReportTargetSpecifyTask : ReportTarget
+    public class IndividualTaskSpecify : TaskSpecify
     {
         public List<TaskSearchMethod> TargetTasks {get; set;}
 
-        public ReportTargetSpecifyTask() { }
-        public ReportTargetSpecifyTask(
-            string title,
-            Period period,
+        public IndividualTaskSpecify() { }
+        public IndividualTaskSpecify(
             List<TaskSearchMethod> targetTasks)
         {
-            this.Title = title;
-            this.Period = period;
             this.TargetTasks = targetTasks;
         }
 
-        public override TaskReport CreateReport(TaskLogs logs)
+        public override List<TaskSearchMethod> CreateTaskSearchMethods(TaskLogs logs)
         {
-            return logs.CreateReport(TargetTasks);
+            return TargetTasks;
         }
     }
 }

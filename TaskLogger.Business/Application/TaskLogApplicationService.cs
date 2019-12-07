@@ -132,10 +132,10 @@ namespace TaskLogger.Business.Application
         //    return logs.CreateReport(targets);
         //}
 
-        public TaskReport CreateReport(ReportTarget reportTarget)
+        public TaskReport CreateReport(Period period, TaskSpecify taskSpecify)
         {
-            var logs = taskLogRepository.FindWithinPeriod(reportTarget.Period);
-            return reportTarget.CreateReport(logs);
+            var logs = taskLogRepository.FindWithinPeriod(period);
+            return logs.CreateReport(taskSpecify.CreateTaskSearchMethods(logs));
         }
 
         public List<string> RecentlyTaskNames()

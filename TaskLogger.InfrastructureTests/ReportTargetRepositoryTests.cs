@@ -17,8 +17,8 @@ namespace TaskLogger.Infrastructure.Tests
         {
             var rep = new ReportTargetRepository();
             var targets = rep.FindAll();
-            targets.Add(new ReportTargetAllTask("abc", new WholePeriod()));
-            targets.Add(new ReportTargetSpecifyTask("abc", new DatePeriod(DateTime.Today), new List<TaskSearchMethod>()));
+            targets.Add(new ReportTarget("ABC", new WholePeriod(), new AllTaskSpecify()));
+            targets.Add(new ReportTarget("abc",  new DatePeriod(DateTime.Today), new IndividualTaskSpecify(new List<TaskSearchMethod>())));
             rep.Save();
 
         }

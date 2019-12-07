@@ -17,6 +17,15 @@ namespace TaskLogger.Business.Domain.Model
     }
     public class TaskSearchMethod
     {
+        public TaskSearchMethod() { }
+
+        public TaskSearchMethod(
+            string TaskKeyword,
+            TaskSearchMethodType SearchMethod)
+        {
+            this.TaskKeyword = TaskKeyword;
+            this.SearchMethod = SearchMethod;
+        }
         public string TaskKeyword { get; set; }
         public TaskSearchMethodType SearchMethod { get; set; }
 

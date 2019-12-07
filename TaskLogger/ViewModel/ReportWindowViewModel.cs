@@ -11,15 +11,7 @@ using TaskLogger.Business.Domain.Model;
 
 namespace TaskLogger.ViewModel
 {
-    public enum SpecifyTaskMethod
-    {
-        [Description("タスク指定")]
-        SpecifyTask,
-        [Description("全てのタスク")]
-        AllTasks,
-        //[Description("全てのタスク(検索)")]
-        //AllTasksFor
-    }
+
     public class ReportWindowViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -70,59 +62,22 @@ namespace TaskLogger.ViewModel
             }
         }
 
-        public ObservableCollection<PeriodViewModel> Periods { get; set; }
-
-        private PeriodViewModel _Period;
-        public PeriodViewModel Period
+        public ObservableCollection<TaskSpecifyViewModel> TaskSpecifies { get; set; }
+        private TaskSpecifyViewModel _TaskSpecify;
+        public TaskSpecifyViewModel TaskSpecify
         {
-            get { return _Period; }
+            get { return _TaskSpecify; }
             set
             {
-                if (value == _Period)
+                if (value == _TaskSpecify)
                     return;
-                _Period = value;
-                RaisePropertyChanged(nameof(Period));
+                _TaskSpecify = value;
+                RaisePropertyChanged(nameof(TaskSpecify));
             }
         }
-        private SpecifyTaskMethod _SpecifyTaskMethod;
-        public SpecifyTaskMethod SpecifyTaskMethod
-        {
-            get { return _SpecifyTaskMethod; }
-            set
-            {
-                if (value == _SpecifyTaskMethod)
-                    return;
-                _SpecifyTaskMethod = value;
-                RaisePropertyChanged(nameof(SpecifyTaskMethod));
-            }
-        }
-
-        //private PeriodType _PeriodType;
-        //public PeriodType PeriodType
-        //{
-        //    get { return _PeriodType; }
-        //    set
-        //    {
-        //        if (value == _PeriodType)
-        //            return;
-        //        _PeriodType = value;
-        //        switch(_PeriodType)
-        //        {
-        //            case PeriodType.DatePeriod:
-        //                Period = new DatePeriodViewModel();
-        //                break;
-        //            case PeriodType.PartialPeriod:
-        //                Period = new PartialPeriodViewModel();
-        //                break;
-        //            case PeriodType.WholePeriod:
-        //                Period = new WholePeriodViewModel();
-        //                break;
-        //        }
-        //        RaisePropertyChanged(nameof(PeriodType));
-        //    }
-        //}
 
         public ObservableCollection<TaskReportItemViewModel> TaskReports { get; set; }
+
         public ReportViewModel(TaskLogApplicationService service, ReportTarget reportTarget)
         {
             ObservableCollection<PeriodViewModel> periods = new ObservableCollection<PeriodViewModel>();
@@ -147,58 +102,69 @@ namespace TaskLogger.ViewModel
             }
 
             var targets = new ObservableCollection<TaskReportItemViewModel>();
-            var specifyTaskMethod = SpecifyTaskMethod;
-            if (reportTarget is ReportTargetAllTask)
+
+
+            TaskSpecifyViewModel reportTargetVm = null;
+            if (reportTarget.TaskSpecify is AllTaskSpecify)
             {
-                specifyTaskMethod = SpecifyTaskMethod.AllTasks;
+                reportTargetVm = new AllTaskSpecifyViewModel();
             }
-            if (reportTarget is ReportTargetSpecifyTask)
+            if (reportTarget.TaskSpecify is IndividualTaskSpecify)
             {
-                specifyTaskMethod = SpecifyTaskMethod.SpecifyTask;
-                foreach(var x in ((ReportTargetSpecifyTask)reportTarget).TargetTasks)
+                reportTargetVm = new IndividualTaskSpecifyViewModel();
+                foreach(var x in ((IndividualTaskSpecify)reportTarget.TaskSpecify).TargetTasks)
                     targets.Add(new TaskReportItemViewModel(x.TaskKeyword, x.SearchMethod, 0));
             }
-            Init(service, reportTarget.Title, period, specifyTaskMethod, targets);
+
+            Init(service, reportTarget.Title, period, reportTargetVm, targets);
+        }
+
+        public ObservableCollection<PeriodViewModel> Periods { get; set; }
+        private PeriodViewModel _Period;
+        public PeriodViewModel Period
+        {
+            get { return _Period; }
+            set
+            {
+                if (value == _Period)
+                    return;
+                _Period = value;
+                RaisePropertyChanged(nameof(Period));
+            }
         }
 
         public ReportTarget CreateModel()
         {
-            if(SpecifyTaskMethod == SpecifyTaskMethod.AllTasks)
-            {
-                return new ReportTargetAllTask(Title, Period.Create());
-            }
-            else if(SpecifyTaskMethod == SpecifyTaskMethod.SpecifyTask)
-            {
-                return new ReportTargetSpecifyTask(Title, Period.Create(), CreateTaskSearhMethods());
-            }
-            return null;
+            return new Business.Domain.Model.ReportTarget(Title, Period.Create(), TaskSpecify.Create(CreateTaskSearhMethods()));
         }
 
         public ReportViewModel(TaskLogApplicationService service)
         {
-            Init(service, "新規", new DatePeriodViewModel(), SpecifyTaskMethod.AllTasks,  new ObservableCollection<TaskReportItemViewModel>());
+            Init(service, "新規", new DatePeriodViewModel(), new AllTaskSpecifyViewModel(),  new ObservableCollection<TaskReportItemViewModel>());
         }
 
-        public void Init(TaskLogApplicationService service, string title, PeriodViewModel period,  SpecifyTaskMethod specifyTaskMethod, ObservableCollection<TaskReportItemViewModel> targets)
+        private  static T ItselfOrDefault<T>(object obj) where T : new() { return  (obj != null && obj.GetType() is T) ? (T)obj : new T(); }
+        public void Init(TaskLogApplicationService service, string title, PeriodViewModel period,  TaskSpecifyViewModel taskSpecify, ObservableCollection<TaskReportItemViewModel> targets)
         {
             this.service = service;
             this.TaskReports = targets;
-            Title = title;
-            Period = period;
+            this.Title = title;
             Periods = new ObservableCollection<PeriodViewModel>();
-            Periods.Add(new WholePeriodViewModel());
-            Periods.Add(new PartialPeriodViewModel());
-            Periods.Add(new DatePeriodViewModel());
-            for (int i = 0; i < Periods.Count(); i++)
-                if (Periods[i].GetType() == period.GetType())
-                    Periods[i] = period;
+            Periods.Add(ItselfOrDefault<WholePeriodViewModel>(period));
+            Periods.Add(ItselfOrDefault<PartialPeriodViewModel>(period));
+            Periods.Add(ItselfOrDefault<DatePeriodViewModel>(period));
+            this.Period = period != null ? period : Periods[0];
 
-            SpecifyTaskMethod = specifyTaskMethod;
+            TaskSpecifies = new ObservableCollection<TaskSpecifyViewModel>();
+            TaskSpecifies.Add(ItselfOrDefault<AllTaskSpecifyViewModel>(taskSpecify));
+            TaskSpecifies.Add(ItselfOrDefault<AllTaskSpecifyByKeywordViewModel>(taskSpecify));
+            TaskSpecifies.Add(ItselfOrDefault<IndividualTaskSpecifyViewModel>(taskSpecify));
+            this.TaskSpecify = taskSpecify != null ? taskSpecify :TaskSpecifies[0];
 
             ReportCommand = new DelegateCommand(
                     (_) =>
                     {
-                        var report = service.CreateReport(CreateModel());
+                        var report = service.CreateReport(Period.Create(), TaskSpecify.Create(CreateTaskSearhMethods()));
                         Update(report);
                     });
             AddRowCommand = new DelegateCommand(
