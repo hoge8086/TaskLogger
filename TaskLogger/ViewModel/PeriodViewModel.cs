@@ -14,15 +14,7 @@ namespace TaskLogger.ViewModel
         public abstract Period Create();
     }
 
-    public enum PeriodType
-    {
-        [Description("全期間")]
-        WholePeriod,
-        [Description("指定期間")]
-        PartialPeriod,
-        [Description("日付")]
-        DatePeriod
-    }
+    [Description("全期間")]
     public class WholePeriodViewModel : PeriodViewModel
     {
         public override Period Create()
@@ -31,6 +23,7 @@ namespace TaskLogger.ViewModel
         }
     }
 
+    [Description("指定期間")]
     public class PartialPeriodViewModel : PeriodViewModel
     {
         public PartialPeriodViewModel()
@@ -68,6 +61,8 @@ namespace TaskLogger.ViewModel
         }
 
     }
+
+    [Description("日付")]
     public class DatePeriodViewModel : PeriodViewModel
     {
         public DatePeriodViewModel()

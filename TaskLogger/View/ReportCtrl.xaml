@@ -20,12 +20,6 @@
         <Style TargetType="{x:Type TextBlock}">
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
-        <ObjectDataProvider x:Key="periodTypes" MethodName="GetValues" 
-                            ObjectType="{x:Type sys:Enum}"> 
-            <ObjectDataProvider.MethodParameters> 
-                <x:Type TypeName="vm:PeriodType"/> 
-            </ObjectDataProvider.MethodParameters> 
-        </ObjectDataProvider> 
         <ObjectDataProvider x:Key="specifyTaskMethods" MethodName="GetValues" 
                             ObjectType="{x:Type sys:Enum}"> 
             <ObjectDataProvider.MethodParameters> 
@@ -57,13 +51,13 @@
         <ComboBox Grid.Column="1" Grid.Row="0" Margin="0,5,0,0"
             VerticalAlignment="Center"
             HorizontalAlignment="Left"
-            x:Name="peridoComb" Width="100" ItemsSource="{Binding Source={StaticResource periodTypes}}"
+            x:Name="peridoComb" Width="100" ItemsSource="{Binding Periods}"
             HorizontalContentAlignment="Center"
-            SelectedItem="{Binding PeriodType}">
+            SelectedItem="{Binding Period}">
             <!--https://qiita.com/inabe49/items/ff16344af627d039da73-->
             <ComboBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Converter={local:EnumToStringConverter}}"/>
+                    <TextBlock Text="{Binding Converter={local:ToClassDiscriptionConverter}}"/>
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>

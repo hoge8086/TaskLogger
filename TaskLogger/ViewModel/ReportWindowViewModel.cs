@@ -15,8 +15,10 @@ namespace TaskLogger.ViewModel
     {
         [Description("タスク指定")]
         SpecifyTask,
-        [Description("すべてのタスク")]
-        AllTasks
+        [Description("全てのタスク")]
+        AllTasks,
+        //[Description("全てのタスク(検索)")]
+        //AllTasksFor
     }
     public class ReportWindowViewModel : INotifyPropertyChanged
     {
@@ -67,6 +69,9 @@ namespace TaskLogger.ViewModel
                 RaisePropertyChanged(nameof(Title));
             }
         }
+
+        public ObservableCollection<PeriodViewModel> Periods { get; set; }
+
         private PeriodViewModel _Period;
         public PeriodViewModel Period
         {
@@ -92,50 +97,49 @@ namespace TaskLogger.ViewModel
             }
         }
 
-        private PeriodType _PeriodType;
-        public PeriodType PeriodType
-        {
-            get { return _PeriodType; }
-            set
-            {
-                if (value == _PeriodType)
-                    return;
-                _PeriodType = value;
-                switch(_PeriodType)
-                {
-                    case PeriodType.DatePeriod:
-                        Period = new DatePeriodViewModel();
-                        break;
-                    case PeriodType.PartialPeriod:
-                        Period = new PartialPeriodViewModel();
-                        break;
-                    case PeriodType.WholePeriod:
-                        Period = new WholePeriodViewModel();
-                        break;
-                }
-                RaisePropertyChanged(nameof(PeriodType));
-            }
-        }
+        //private PeriodType _PeriodType;
+        //public PeriodType PeriodType
+        //{
+        //    get { return _PeriodType; }
+        //    set
+        //    {
+        //        if (value == _PeriodType)
+        //            return;
+        //        _PeriodType = value;
+        //        switch(_PeriodType)
+        //        {
+        //            case PeriodType.DatePeriod:
+        //                Period = new DatePeriodViewModel();
+        //                break;
+        //            case PeriodType.PartialPeriod:
+        //                Period = new PartialPeriodViewModel();
+        //                break;
+        //            case PeriodType.WholePeriod:
+        //                Period = new WholePeriodViewModel();
+        //                break;
+        //        }
+        //        RaisePropertyChanged(nameof(PeriodType));
+        //    }
+        //}
 
         public ObservableCollection<TaskReportItemViewModel> TaskReports { get; set; }
         public ReportViewModel(TaskLogApplicationService service, ReportTarget reportTarget)
         {
-            var periodType = PeriodType.DatePeriod;
-            PeriodViewModel periodViewModel = null;
+            ObservableCollection<PeriodViewModel> periods = new ObservableCollection<PeriodViewModel>();
+            PeriodViewModel period = null;
+
             if (reportTarget.Period is DatePeriod)
             {
-                periodType = PeriodType.DatePeriod;
-                periodViewModel = new DatePeriodViewModel() { Date = ((DatePeriod)reportTarget.Period).Date };
+                period = new DatePeriodViewModel() { Date = ((DatePeriod)reportTarget.Period).Date };
             }
             if (reportTarget.Period is WholePeriod)
             {
-                periodType = PeriodType.WholePeriod;
-                periodViewModel = new WholePeriodViewModel();
+                period = new WholePeriodViewModel();
             }
+
             if (reportTarget.Period is PartialPeriod)
             {
-                periodType = PeriodType.PartialPeriod;
-                periodViewModel = new PartialPeriodViewModel()
+                period = new PartialPeriodViewModel()
                 {
                     Start = ((PartialPeriod)reportTarget.Period).StartDay,
                     End = ((PartialPeriod)reportTarget.Period).EndDay
@@ -154,7 +158,7 @@ namespace TaskLogger.ViewModel
                 foreach(var x in ((ReportTargetSpecifyTask)reportTarget).TargetTasks)
                     targets.Add(new TaskReportItemViewModel(x.TaskKeyword, x.SearchMethod, 0));
             }
-            Init(service, reportTarget.Title, periodType,  periodViewModel, specifyTaskMethod, targets);
+            Init(service, reportTarget.Title, period, specifyTaskMethod, targets);
         }
 
         public ReportTarget CreateModel()
@@ -172,16 +176,23 @@ namespace TaskLogger.ViewModel
 
         public ReportViewModel(TaskLogApplicationService service)
         {
-            Init(service, "新規", PeriodType.DatePeriod, new DatePeriodViewModel(), SpecifyTaskMethod.AllTasks,  new ObservableCollection<TaskReportItemViewModel>());
+            Init(service, "新規", new DatePeriodViewModel(), SpecifyTaskMethod.AllTasks,  new ObservableCollection<TaskReportItemViewModel>());
         }
 
-        public void Init(TaskLogApplicationService service, string title, PeriodType periodType, PeriodViewModel periodViewModel, SpecifyTaskMethod specifyTaskMethod, ObservableCollection<TaskReportItemViewModel> targets)
+        public void Init(TaskLogApplicationService service, string title, PeriodViewModel period,  SpecifyTaskMethod specifyTaskMethod, ObservableCollection<TaskReportItemViewModel> targets)
         {
             this.service = service;
             this.TaskReports = targets;
             Title = title;
-            PeriodType = periodType;
-            Period = periodViewModel;
+            Period = period;
+            Periods = new ObservableCollection<PeriodViewModel>();
+            Periods.Add(new WholePeriodViewModel());
+            Periods.Add(new PartialPeriodViewModel());
+            Periods.Add(new DatePeriodViewModel());
+            for (int i = 0; i < Periods.Count(); i++)
+                if (Periods[i].GetType() == period.GetType())
+                    Periods[i] = period;
+
             SpecifyTaskMethod = specifyTaskMethod;
 
             ReportCommand = new DelegateCommand(

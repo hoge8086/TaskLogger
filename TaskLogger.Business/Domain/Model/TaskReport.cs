@@ -8,6 +8,7 @@ namespace TaskLogger.Business.Domain.Model
     public class TaskReport
     {
         public List<TaskReportItem> Items { get; set; }
+        public Int64 TotalMinutes { get; set; }
     }
     public class TaskReportItem
     {
