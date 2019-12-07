@@ -57,6 +57,9 @@
     <Compile Include="ViewModel\ReportWindowViewModel.cs" />
     <Compile Include="View\EnumConverter.cs" />
     <Compile Include="View\MinutesToHHMMConverter.cs" />
+    <Compile Include="View\ReportCtrl.xaml.cs">
+      <DependentUpon>ReportCtrl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ReportWindow.xaml.cs">
       <DependentUpon>ReportWindow.xaml</DependentUpon>
     </Compile>
@@ -74,6 +77,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\ReportCtrl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\ReportWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
