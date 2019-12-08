@@ -13,6 +13,25 @@ namespace TaskLogger.ViewModel
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         public abstract TaskSpecify Create(List<TaskSearchMethod> targetTasks);
+        public static TaskSpecifyViewModel Create(TaskSpecify taskSpecify)
+        {
+            if (taskSpecify is AllTaskSpecify)
+            {
+                if(((AllTaskSpecify)taskSpecify).HasTaskSearchMethod())
+                {
+                    var search = ((AllTaskSpecify)taskSpecify).TaskSearchMethod;
+                    return new AllTaskSpecifyByKeywordViewModel(search.TaskKeyword, search.SearchMethod);
+                }else
+                {
+                    return new AllTaskSpecifyViewModel();
+                }
+            }
+            if (taskSpecify is IndividualTaskSpecify)
+            {
+                return new IndividualTaskSpecifyViewModel();
+            }
+            return new AllTaskSpecifyViewModel();
+        }
     }
 
     [Description("全てのタスク")]
@@ -34,6 +53,13 @@ namespace TaskLogger.ViewModel
         {
             _TaskName = "";
             _TaskSearchMethodType = TaskSearchMethodType.FirstMatch;
+        }
+        public AllTaskSpecifyByKeywordViewModel(
+            string TaskName,
+            TaskSearchMethodType TaskSearchMethodType)
+        {
+            _TaskName = TaskName;
+            _TaskSearchMethodType = TaskSearchMethodType;
         }
 
         public string TaskName

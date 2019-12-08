@@ -12,6 +12,28 @@ namespace TaskLogger.ViewModel
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         public abstract Period Create();
+        public static PeriodViewModel Create(Period period)
+        {
+            if (period is DatePeriod)
+            {
+                return new DatePeriodViewModel() { Date = ((DatePeriod)period).Date };
+            }
+            if (period is WholePeriod)
+            {
+                return new WholePeriodViewModel();
+            }
+
+            if (period is PartialPeriod)
+            {
+                return new PartialPeriodViewModel()
+                {
+                    Start = ((PartialPeriod)period ).StartDay,
+                    End = ((PartialPeriod)period ).EndDay
+                };
+            }
+
+            return new WholePeriodViewModel();
+        }
     }
 
     [Description("全期間")]

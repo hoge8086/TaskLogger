@@ -81,41 +81,14 @@ namespace TaskLogger.ViewModel
         public ReportViewModel(TaskLogApplicationService service, ReportTarget reportTarget)
         {
             ObservableCollection<PeriodViewModel> periods = new ObservableCollection<PeriodViewModel>();
-            PeriodViewModel period = null;
-
-            if (reportTarget.Period is DatePeriod)
-            {
-                period = new DatePeriodViewModel() { Date = ((DatePeriod)reportTarget.Period).Date };
-            }
-            if (reportTarget.Period is WholePeriod)
-            {
-                period = new WholePeriodViewModel();
-            }
-
-            if (reportTarget.Period is PartialPeriod)
-            {
-                period = new PartialPeriodViewModel()
-                {
-                    Start = ((PartialPeriod)reportTarget.Period).StartDay,
-                    End = ((PartialPeriod)reportTarget.Period).EndDay
-                };
-            }
-
+            PeriodViewModel period = PeriodViewModel.Create(reportTarget.Period);
             var targets = new ObservableCollection<TaskReportItemViewModel>();
-
-
-            TaskSpecifyViewModel reportTargetVm = null;
-            if (reportTarget.TaskSpecify is AllTaskSpecify)
-            {
-                reportTargetVm = new AllTaskSpecifyViewModel();
-            }
+            TaskSpecifyViewModel reportTargetVm = TaskSpecifyViewModel.Create(reportTarget.TaskSpecify);
             if (reportTarget.TaskSpecify is IndividualTaskSpecify)
             {
-                reportTargetVm = new IndividualTaskSpecifyViewModel();
                 foreach(var x in ((IndividualTaskSpecify)reportTarget.TaskSpecify).TargetTasks)
                     targets.Add(new TaskReportItemViewModel(x.TaskKeyword, x.SearchMethod, 0));
             }
-
             Init(service, reportTarget.Title, period, reportTargetVm, targets);
         }
 
@@ -192,7 +165,6 @@ namespace TaskLogger.ViewModel
             }
         }
     }
-
 
     public class TaskReportItemViewModel : INotifyPropertyChanged
     {

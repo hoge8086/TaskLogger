@@ -49,6 +49,10 @@ namespace TaskLogger.Business.Domain.Model
     {
         public TaskSearchMethod TaskSearchMethod { get; set; }
 
+        public bool HasTaskSearchMethod()
+        {
+            return this.TaskSearchMethod != null;
+        }
         public AllTaskSpecify()
         {
             this.TaskSearchMethod = null;
