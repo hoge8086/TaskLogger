@@ -43,6 +43,7 @@
             <DatePicker Text="{Binding Date, Mode=TwoWay}" Width="130" HorizontalAlignment="Left" Margin="5" Focusable="False"  />
             -->
             <Button Content="▶" Background="Transparent" BorderBrush="Transparent" Foreground="Gray" Command="{Binding NextDayCommand}"/>
+            <TextBlock Text="{Binding Date, Converter={local:ToDaysFromTdayConverter}}" Margin="10,0,0,0" VerticalAlignment="Center" />
         </StackPanel>
         <DataGrid x:Name="taskLogDataGrid" ItemsSource="{Binding TaskLogs}"
             MaxHeight="400"

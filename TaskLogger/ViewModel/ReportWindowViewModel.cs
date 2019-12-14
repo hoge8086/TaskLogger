@@ -116,7 +116,7 @@ namespace TaskLogger.ViewModel
             Init(service, "新規", new DatePeriodViewModel(), new AllTaskSpecifyViewModel(),  new ObservableCollection<TaskReportItemViewModel>());
         }
 
-        private  static T ItselfOrDefault<T>(object obj) where T : new() { return  (obj != null && obj.GetType() is T) ? (T)obj : new T(); }
+        private  static T ItselfOrDefault<T>(object obj) where T : new() { return  (obj != null && obj is T) ? (T)obj : new T(); }
         public void Init(TaskLogApplicationService service, string title, PeriodViewModel period,  TaskSpecifyViewModel taskSpecify, ObservableCollection<TaskReportItemViewModel> targets)
         {
             this.service = service;

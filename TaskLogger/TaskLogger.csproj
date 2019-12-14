@@ -67,6 +67,7 @@
     </Compile>
     <Compile Include="View\ToClassDiscriptionConverter.cs" />
     <Compile Include="View\ToClassTypeConverter.cs" />
+    <Compile Include="View\ToDaysFromTdayConverter.cs" />
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
