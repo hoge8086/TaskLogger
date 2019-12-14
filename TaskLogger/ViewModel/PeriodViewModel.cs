@@ -50,8 +50,8 @@ namespace TaskLogger.ViewModel
     {
         public PartialPeriodViewModel()
         {
-            End = DateTime.Today;
-            Start = DateTime.Today.AddDays(-7);
+            _End = DateTime.Today;
+            _Start = DateTime.Today.AddDays(-7);
         }
         private DateTime _Start;
         public DateTime Start
