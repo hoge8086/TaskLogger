@@ -107,12 +107,13 @@ namespace TaskLogger.Business.Domain.Model
         {
             var recentlyTaskNames = taskLogRepository.FindWithinPeriod(new PartialPeriod() { EndDay = DateTime.Today, StartDay = DateTime.Today.AddDays(-14)}).TaskNamesByRecentlyOrder();
             string defaultTaskName= recentlyTaskNames.Count > 0 ? recentlyTaskNames[0] : "";
+            DateTime defDateTime = logDate.Date.AddHours(8).AddMinutes(30);
             if(logDate.Date == DateTime.Today.Date)
             {
-                return new TaskLog(defaultTaskName, DateTime.Now);
+                defDateTime = DateTime.Now;
             }
             var logs = taskLogRepository.FindWithinPeriod(new DatePeriod() { Date = logDate.Date });
-            return new TaskLog(defaultTaskName, logs.LastTime() ?? logDate.Date.AddHours(8).AddMinutes(30));
+            return new TaskLog(defaultTaskName, logs.LastTime() ?? defDateTime);
         }
     }
 
