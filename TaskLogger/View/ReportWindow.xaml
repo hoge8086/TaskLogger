@@ -20,7 +20,7 @@
             SelectedIndex="0">
             <TabControl.ItemTemplate>
                 <DataTemplate>
-                    <TextBox Text="{Binding Title}" BorderBrush="Transparent"/>
+                    <TextBox Text="{Binding Title}" BorderBrush="Transparent" />
                 </DataTemplate>
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
