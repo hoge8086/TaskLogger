@@ -47,8 +47,9 @@
                 x:Name="peridoComb" Width="100"
                 HorizontalContentAlignment="Center"
                 IsSynchronizedWithCurrentItem="True"
-                SelectedItem="{Binding Period}"
-                ItemsSource="{Binding Periods}">
+                ItemsSource="{Binding Periods}"
+                SelectedItem="{Binding Period}">
+                <!--ItemsSourceの後に,SelectedItemを設定する必要がある[参考:https://stackoverflow.com/questions/1301119/silverlight-xaml-attribute-definition-order-matters]-->
                 <!--https://qiita.com/inabe49/items/ff16344af627d039da73-->
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
@@ -85,7 +86,8 @@
                 HorizontalContentAlignment="Center" Margin="0,5,0,0"
                 IsSynchronizedWithCurrentItem="True"
                 ItemsSource="{Binding TaskSpecifies}"
-                SelectedItem="{Binding TaskSpecify}">
+                SelectedItem="{Binding TaskSpecify, Mode=TwoWay}">
+                <!--ItemsSourceの後に,SelectedItemを設定する必要がある[参考:https://stackoverflow.com/questions/1301119/silverlight-xaml-attribute-definition-order-matters]-->
                 <!--https://qiita.com/inabe49/items/ff16344af627d039da73-->
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
