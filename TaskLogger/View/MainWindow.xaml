@@ -101,7 +101,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Binding="{Binding DownTimeMinutes, Mode=TwoWay}" ElementStyle="{StaticResource textCenter}" Header="中断"  Width="40"/>
+                <DataGridTextColumn Binding="{Binding DownTimeMinutes, UpdateSourceTrigger=LostFocus}" ElementStyle="{StaticResource textCenter}" Header="中断"  Width="40"/>
                 <DataGridTextColumn Binding="{Binding WorkingMinutes, Converter={local:MinutesToHHmmConverter}}" ElementStyle="{StaticResource textCenter}" Header="時間"  Width="40" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
