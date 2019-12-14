@@ -67,7 +67,7 @@
                             <DatePicker Text="{Binding Start, Mode=TwoWay}" Width="30" HorizontalAlignment="Left" VerticalAlignment="Center" Focusable="False" BorderBrush="Transparent" BorderThickness="0" />
                             <TextBlock Text="～" VerticalAlignment="Center"/>
                             <TextBlock Text="{Binding End, StringFormat='yyyy年MM月dd日(ddd)', ConverterCulture=ja-JP}" Margin="5,0,0,0" VerticalAlignment="Center" />
-                            <DatePicker Text="{Binding End, Mode=TwoWay}" Width="30" HorizontalAlignment="Left" VerticalAlignment="Center" Focusable="False" BorderBrush="Transparent" BorderThickness="0" />
+                            <DatePicker Text="{Binding End, Mode=TwoWay}" Width="30" HorizontalAlignment="Left" VerticalAlignment="Center" Focusable="False" BorderBrush="Transparent" BorderThickness="0" DisplayDateStart="{Binding Start}"/>
                         </StackPanel>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:DatePeriodViewModel}">

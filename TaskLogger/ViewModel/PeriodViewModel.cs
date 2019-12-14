@@ -61,8 +61,10 @@ namespace TaskLogger.ViewModel
             {
                 if (value == _Start)
                     return;
+                _End = value.AddDays((_End - _Start).Days);
                 _Start = value;
                 RaisePropertyChanged(nameof(Start));
+                RaisePropertyChanged(nameof(End));
             }
         }
         private DateTime _End;
