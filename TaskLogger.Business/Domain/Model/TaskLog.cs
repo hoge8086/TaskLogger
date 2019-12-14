@@ -41,6 +41,12 @@ namespace TaskLogger.Business.Domain.Model
         //}
         public void ChangeEnd(DateTime? end)
         {
+            if (end != null && Start.Date != end.Value.Date)
+                throw new InvalidOperationException("日にちをまたぐタスクログは作成できません.");
+
+            if (end != null && Start > end.Value)
+                throw new InvalidOperationException("終了時刻は開始時刻より早くなるようにしてください.");
+
             End = end;
         }
         public void ChangeDownTime(int downTimeMinutes)
@@ -56,11 +62,14 @@ namespace TaskLogger.Business.Domain.Model
 
         public void ChangeStart(DateTime start)
         {
+            if (End!= null && start.Date != End.Value.Date)
+                throw new InvalidOperationException("日にちをまたぐタスクログは作成できません.");
+
             this.Start = start;
         }
         public void StartNow()
         {
-            this.Start = DateTime.Now;
+            ChangeEnd(DateTime.Now);
         }
         public void EndNow()
         {
