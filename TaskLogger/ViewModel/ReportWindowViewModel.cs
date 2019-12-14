@@ -78,6 +78,18 @@ namespace TaskLogger.ViewModel
 
         public ObservableCollection<TaskReportItemViewModel> TaskReports { get; set; }
 
+        public int TotalWorkingMinutes
+        {
+            get
+            {
+                int total = 0;
+                foreach (var task in TaskReports)
+                    total += task.WorkingMinutes ?? 0;
+                return total;
+
+            }
+        }
+
         public ReportViewModel(TaskLogApplicationService service, ReportTarget reportTarget)
         {
             ObservableCollection<PeriodViewModel> periods = new ObservableCollection<PeriodViewModel>();
@@ -163,6 +175,7 @@ namespace TaskLogger.ViewModel
             {
                 TaskReports.Add(new TaskReportItemViewModel(item.TaskSearchMethod.TaskKeyword, item.TaskSearchMethod.SearchMethod, item.TotalMinutes));
             }
+            RaisePropertyChanged(nameof(TotalWorkingMinutes));
         }
     }
 
