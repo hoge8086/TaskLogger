@@ -40,11 +40,11 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Column="0" Grid.Row="0" Text="レポート期間：" Margin="5,5,0,0" VerticalAlignment="Center"/>
-        <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
-            <ComboBox Margin="0,5,0,0"
+        <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal" Margin="0,5,0,0">
+            <ComboBox 
                 VerticalAlignment="Center"
                 HorizontalAlignment="Left"
-                x:Name="peridoComb" Width="100"
+                x:Name="peridoComb" Width="120"
                 HorizontalContentAlignment="Center"
                 IsSynchronizedWithCurrentItem="True"
                 ItemsSource="{Binding Periods}"
@@ -57,7 +57,7 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-            <ContentControl x:Name="specifyTask" Margin="0,5,0,0" Content="{Binding Period}">
+            <ContentControl x:Name="specifyTask"  Content="{Binding Period}">
                 <ContentControl.Resources>
                     <DataTemplate DataType="{x:Type vm:WholePeriodViewModel}">
                     </DataTemplate>
@@ -80,10 +80,11 @@
             </ContentControl>
         </StackPanel>
         <TextBlock Grid.Column="0" Grid.Row="1" Text="出力タスク：" Margin="5,5,0,0" VerticalAlignment="Center"/>
-        <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
+        <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Margin="0,5,0,0">
             <ComboBox x:Name="specifyTaskComb"
-                Width="150"
-                HorizontalContentAlignment="Center" Margin="0,5,0,0"
+                Width="120"
+                VerticalAlignment="Center"
+                HorizontalContentAlignment="Center"
                 IsSynchronizedWithCurrentItem="True"
                 ItemsSource="{Binding TaskSpecifies}"
                 SelectedItem="{Binding TaskSpecify, Mode=TwoWay}">
@@ -95,7 +96,7 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
-            <ContentControl Margin="10,5,0,0" Content="{Binding TaskSpecify}">
+            <ContentControl Margin="10,0,0,0" Content="{Binding TaskSpecify}" VerticalAlignment="Center">
                 <ContentControl.Resources>
                     <DataTemplate DataType="{x:Type vm:AllTaskSpecifyViewModel}">
                         <TextBlock Foreground="Red" Text="※グリッドは編集不可です" VerticalAlignment="Center"/>
@@ -115,7 +116,8 @@
                         </StackPanel>
                     </DataTemplate>
                     <DataTemplate DataType="{x:Type vm:IndividualTaskSpecifyViewModel}">
-                        <Button Content="行追加" Padding="15,0,15,0" HorizontalAlignment="Left" Margin="10,5,0,0" Command="{Binding DataContext.AddRowCommand, ElementName=specifyTask}"/>
+                        <Button Content="行追加" Padding="15,0,15,0" HorizontalAlignment="Left" Margin="10,0,0,0" Command="{Binding DataContext.AddRowCommand, ElementName=specifyTask}"
+                                VerticalAlignment="Center"/>
                     </DataTemplate>
                 </ContentControl.Resources>
             </ContentControl>

@@ -9,7 +9,7 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Closing="Window_Closing"
-        Title="ReportWindow" Width="500" SizeToContent="Height">
+        Title="ReportWindow" Width="520" SizeToContent="Height">
     <Window.Resources>
     </Window.Resources>
     <Grid>
