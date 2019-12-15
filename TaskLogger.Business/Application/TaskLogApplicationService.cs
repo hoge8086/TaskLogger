@@ -73,6 +73,12 @@ namespace TaskLogger.Business.Application
             taskLogRepository.Save();
         }
 
+        public TaskLog GetCurrentWorkingTask()
+        {
+            var log = taskLogRepository.FindWithinPeriod(new DatePeriod(DateTime.Today));
+            return log.LastIncomplateTask();
+        }
+
         public void DeleteTaskLog(int logId)
         {
             var log = taskLogRepository.FindByID(logId);

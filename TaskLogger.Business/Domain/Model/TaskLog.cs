@@ -180,5 +180,11 @@ namespace TaskLogger.Business.Domain.Model
         {
             return Logs.Max(x => (x.End > x.Start ? x.End : x.Start));
         }
+
+        public TaskLog LastIncomplateTask()
+        {
+            var lastTasks = Logs.Where(x => x.End == null).OrderByDescending(x => x.Start).ToList();
+            return lastTasks.Count() > 0 ? lastTasks[0] : null;
+        }
     }
 }
