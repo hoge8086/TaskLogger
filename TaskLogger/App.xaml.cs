@@ -34,10 +34,5 @@ namespace TaskLogger
             ToastService = new ToastCurrentTaskService(45);
             ToastService.StartMonitor();
         }
-
-        private void Application_Deactivated(object sender, EventArgs e)
-        {
-            ToastService.DeactiveNow();
-        }
     }
 }

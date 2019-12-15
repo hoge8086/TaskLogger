@@ -76,7 +76,7 @@ namespace TaskLogger.Business.Application
         public TaskLog GetCurrentWorkingTask()
         {
             var log = taskLogRepository.FindWithinPeriod(new DatePeriod(DateTime.Today));
-            return log.LastIncomplateTask();
+            return log.CurrentIncomplateTask();
         }
 
         public void DeleteTaskLog(int logId)

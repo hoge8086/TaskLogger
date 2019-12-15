@@ -9,13 +9,13 @@ namespace TaskLogger
     //TODO:DDD的に扱うための検討
     public class ToastCurrentTaskService
     {
-        private DateTime lastDeactiveDateTime;
+        private DateTime lastConfirmedDateTime;
         private DispatcherTimer timer;
         private double intervalMinutes;
 
         public ToastCurrentTaskService(double intervalMinutes)
         {
-            DeactiveNow();
+            lastConfirmedDateTime = DateTime.Now;
             timer = new DispatcherTimer();
             timer.Interval = new TimeSpan(0, 0, 30);
             timer.Tick += new EventHandler(WatchCurrentTask);
@@ -31,19 +31,21 @@ namespace TaskLogger
             var notifier = ToastNotificationManager.CreateToastNotifier("Microsoft.Windows.Computer");
             notifier.Show(new ToastNotification(content));
         }
-        public void DeactiveNow()
-        {
-            lastDeactiveDateTime = DateTime.Now;
-        }
         public void StartMonitor()
         {
             timer.Start();
         }
         private void WatchCurrentTask(object sender, EventArgs e)
         {
-            if((DateTime.Now -  lastDeactiveDateTime).TotalMinutes >= intervalMinutes)
+            var currentTask = ((App)App.Current).TaskLogApplicationService.GetCurrentWorkingTask();
+
+            //[基本的に通知は、intervalMinutes分毎に行う、その期間内に]
+            //[作業中のタスクの開始時刻が最後の通知時刻以降に更新された場合のみ、通知タイマをリセットする]
+            if (currentTask != null && currentTask.Start >= lastConfirmedDateTime)
+                lastConfirmedDateTime = currentTask.Start;
+
+            if((DateTime.Now -  lastConfirmedDateTime).TotalMinutes >= intervalMinutes)
             {
-                var currentTask = ((App)App.Current).TaskLogApplicationService.GetCurrentWorkingTask();
                 if(currentTask == null)
                 {
                     Toast("現在のタスク：\n タスクが開始されていません");
@@ -52,7 +54,7 @@ namespace TaskLogger
                 {
                     Toast("現在のタスク：\n " + currentTask.TaskName + "\n " + currentTask.Start.ToString("t") + "～");
                 }
-                DeactiveNow();
+                lastConfirmedDateTime = DateTime.Now;
             }
         }
     }
