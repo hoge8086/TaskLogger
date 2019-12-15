@@ -69,11 +69,11 @@ namespace TaskLogger.Business.Domain.Model
         }
         public void StartNow()
         {
-            ChangeEnd(DateTime.Now);
+            ChangeStart(DateTime.Now);
         }
         public void EndNow()
         {
-            this.End = DateTime.Now;
+            ChangeEnd(DateTime.Now);
         }
         public override string ToString()
         {
